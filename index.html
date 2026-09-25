@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WUP — Is gonna be real</title>
+  <meta name="description" content="Prototipo della hero section WUP: il girasole ruota seguendo lo scroll.">
+
+  <!-- Font di ripiego per i pulsanti: nel design è Acumin VF Wide Semibold (Adobe Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- BARRA DI NAVIGAZIONE (Figma: NAV BAR) -->
+  <header class="nav">
+    <a class="nav__logo" href="#" aria-label="WUP, torna all'inizio">
+      <img src="images/logo.svg" alt="WUP" width="82" height="30">
+    </a>
+    <nav class="nav__links" aria-label="Menu principale">
+      <a class="pill" href="#"><span>Home</span></a>
+      <a class="pill" href="#"><span>Portfolio</span></a>
+      <a class="pill" href="#"><span>Contattaci</span></a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO: questa sezione è alta più dello schermo.
+         Mentre la attraversi, il contenuto resta fermo ("sticky")
+         e lo scroll fa girare il girasole. -->
+    <section class="hero" id="hero" aria-label="Is gonna be real">
+      <div class="hero__sticky">
+        <div class="stage">
+
+          <!-- LIVELLO 1: la scritta, DIETRO al fiore -->
+          <h1 class="motto" aria-label="Is gonna be real">
+            <span class="motto__row">
+              <span class="word" data-word="0"><img src="images/is.svg" alt="" class="w-is"></span>
+              <span class="word" data-word="1"><img src="images/gonna.svg" alt="" class="w-gonna"></span>
+            </span>
+            <span class="motto__row motto__row--2">
+              <span class="word" data-word="2"><img src="images/be.svg" alt="" class="w-be"></span>
+              <span class="word" data-word="3"><img src="images/real.svg" alt="" class="w-real"></span>
+            </span>
+          </h1>
+
+          <!-- LIVELLO 2: il girasole (la sequenza di fotogrammi viene disegnata qui) -->
+          <div class="flower">
+            <canvas id="girasole" aria-hidden="true"></canvas>
+          </div>
+
+          <a class="pill pill--about" href="#chi-siamo"><span>Su di noi</span></a>
+
+          <div class="loader" id="loader" aria-live="polite">0%</div>
+          <div class="scroll-hint" id="hint" aria-hidden="true">Scorri</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sezione di prova: serve solo a vedere il momento in cui la pagina riprende a scorrere -->
+    <section class="next" id="chi-siamo">
+      <p>Qui inizia la sezione successiva del sito.</p>
+    </section>
+  </main>
+
+  <!-- puntatore personalizzato -->
+  <div class="cursore" id="cursore" aria-hidden="true"><img src="images/puntatore.svg" alt=""></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

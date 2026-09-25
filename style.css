@@ -1,0 +1,231 @@
+/* =========================================================
+   WUP — hero con girasole che ruota allo scroll
+   Tutte le misure vengono dalla tavola Figma "Landing Page V3"
+   (1440 × 825 px). --u è "un pixel di Figma" riscalato
+   sullo schermo: così il layout resta identico al design
+   su qualsiasi monitor.
+   ========================================================= */
+
+:root {
+  --nero: #000000;
+  --giallo: #FDD200;
+  --bianco: #FFFFFF;
+
+  /* 1 pixel di Figma, adattato allo schermo */
+  --u: min(100vw / 1440, 100dvh / 825);
+  /* unità della scritta (sul telefono viene ricalcolata) */
+  --m: var(--u);
+
+  /* ⇩ LUNGHEZZA DELL'ANIMAZIONE: quanto scroll serve per il giro completo */
+  --durata-scroll: 300vh;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { background: var(--nero); color: var(--bianco); }
+body {
+  font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- NAVBAR ---------- */
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 10;
+  height: max(64px, calc(var(--u) * 100));
+  padding: 0 max(20px, calc(var(--u) * 50));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  mix-blend-mode: difference;          /* come in Figma */
+}
+.nav__logo img { display: block; width: 82px; height: 30px; }
+.nav__links { display: flex; gap: max(16px, calc(var(--u) * 93)); }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  height: 25px;
+  padding: 4px 16px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 600;
+  font-stretch: 125%;
+  text-transform: uppercase;
+  color: var(--bianco);
+  text-decoration: none;
+  white-space: nowrap;
+  }
+/* hover: una linea sotto il testo, come una sottolineatura */
+.pill span { position: relative; }
+.pill span::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s ease;
+}
+.pill:hover span::after,
+.pill:focus-visible span::after { transform: scaleX(1); }
+.pill:focus-visible { outline: none; }
+
+/* ---------- PUNTATORE PERSONALIZZATO ---------- */
+/* solo con mouse o trackpad (non sul telefono) */
+@media (hover: hover) and (pointer: fine) {
+  html.cursore-attivo, html.cursore-attivo * { cursor: none !important; }
+}
+.cursore {
+  position: fixed;
+  left: 0; top: 0;
+  z-index: 9999;
+  width: 24px;               /* grandezza di un puntatore classico */
+  height: 24px;
+  margin: -12px 0 0 -12px;   /* il centro della stella è la punta */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+  will-change: transform;
+}
+.cursore img { display: block; width: 100%; height: 100%; }
+html.cursore-attivo .cursore { opacity: 1; }
+
+/* ---------- HERO ---------- */
+.hero {
+  position: relative;
+  height: calc(100dvh + var(--durata-scroll));
+}
+.hero__sticky {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  /* la tavola è appoggiata al fondo dello schermo:
+     così lo stelo arriva sempre al bordo della hero */
+  place-items: end center;
+}
+.stage {
+  position: relative;
+  width: calc(var(--u) * 1440);
+  height: calc(var(--u) * 825);
+}
+
+/* LIVELLO 1 — la scritta (Figma: "IS GONNA BE REAL") */
+.motto {
+  position: absolute;
+  z-index: 1;
+  left: calc(var(--u) * 55);
+  bottom: calc(var(--u) * 107);
+  width: calc(var(--m) * 655);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--m) * 42);
+}
+.motto__row { display: flex; align-items: center; gap: calc(var(--m) * 52); }
+.motto__row--2 { gap: calc(var(--m) * 38); }
+
+/* ogni parola ha una "finestra": sale dal basso e compare */
+.word { display: block; overflow: hidden; padding-block: 2px; }
+.word img {
+  display: block;
+  height: auto;
+  transform: translateY(calc(var(--in, 0) * -110% + 110%));
+  opacity: var(--in, 0);
+  will-change: transform, opacity;
+}
+.w-is    { width: calc(var(--m) * 123.4); }
+.w-gonna { width: calc(var(--m) * 463.05); }
+.w-be    { width: calc(var(--m) * 182.95); }
+.w-real  { width: calc(var(--m) * 356.4); }
+
+/* LIVELLO 2 — il girasole (Figma: "Girasole") */
+.flower {
+  position: absolute;
+  z-index: 2;
+  left: calc(var(--u) * 792);
+  top: calc(var(--u) * 100);
+  height: calc(var(--u) * 725);
+  aspect-ratio: 1080 / 1580;           /* proporzioni dei fotogrammi */
+}
+.flower canvas { display: block; width: 100%; height: 100%; }
+
+.pill--about {
+  position: absolute;
+  z-index: 3;
+  left: calc(var(--u) * 1325);
+  top: calc(var(--u) * 693);
+  min-width: 0;
+  padding: 4px 0;
+  width: 65px;
+}
+
+/* caricamento e invito a scorrere */
+.loader, .scroll-hint {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 600;
+  font-stretch: 125%;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  transition: opacity .4s;
+}
+.scroll-hint { opacity: 0; }
+.scroll-hint::after {
+  content: "";
+  display: block;
+  width: 1px; height: 28px;
+  margin: 8px auto 0;
+  background: currentColor;
+  animation: hint 1.6s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes hint { 0%{transform:scaleY(0)} 50%{transform:scaleY(1)} 100%{transform:scaleY(0);transform-origin:bottom} }
+
+/* ---------- SEZIONE SUCCESSIVA (solo prova) ---------- */
+.next {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 40px 20px;
+  background: var(--bianco);
+  color: var(--nero);
+  font-size: 14px;
+}
+
+/* ---------- TELEFONO (schermo verticale) ---------- */
+@media (orientation: portrait) {
+  :root {
+    --u: calc(100vw / 430);
+    --m: calc((100vw - 40px) / 655);
+  }
+  .stage { width: 100vw; height: 100dvh; }
+  .flower {
+    left: 50%;
+    top: auto;
+    bottom: 0;
+    height: min(66dvh, calc(100vw * 1580 / 1080));
+    transform: translateX(-50%);
+  }
+  .motto { left: 20px; top: 88px; bottom: auto; }
+  .pill--about { left: auto; right: 12px; top: auto; bottom: 20px; }
+  .nav__links { gap: 4px; }
+  .nav .pill { min-width: 0; padding: 4px 8px; font-size: 10px; }
+}
+
+/* ---------- Chi preferisce meno animazioni ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .word img { --in: 1; transform: none; }
+  .scroll-hint::after { animation: none; }
+}
