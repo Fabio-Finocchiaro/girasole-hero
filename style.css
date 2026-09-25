@@ -207,9 +207,13 @@ html.cursore-attivo .cursore { opacity: 1; }
 /* ---------- TELEFONO (schermo verticale) ---------- */
 @media (orientation: portrait) {
   :root {
+    /* margine laterale della navbar sul telefono: 16 px, lo standard
+       di Material Design (griglia a multipli di 8) usato da molte app */
+    --margine: 16px;
     --u: calc(100vw / 430);
     --m: calc((100vw - 40px) / 655);
   }
+  .nav { padding: 0 var(--margine); }
   .stage { width: 100vw; height: 100dvh; }
   .flower {
     left: 50%;
@@ -222,6 +226,7 @@ html.cursore-attivo .cursore { opacity: 1; }
   .pill--about { left: auto; right: 12px; top: auto; bottom: 20px; }
   .nav__links { gap: 4px; }
   .nav .pill { min-width: 0; padding: 4px 8px; font-size: 10px; }
+  .nav .pill:last-child { padding-right: 0; }   /* il testo finisce esattamente sul margine */
 }
 
 /* ---------- Chi preferisce meno animazioni ---------- */
