@@ -9,9 +9,10 @@
   <!-- Font di ripiego per i pulsanti: nel design è Acumin VF Wide Semibold (Adobe Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="lavori.css">
 </head>
 <body>
 
@@ -60,7 +61,50 @@
       </div>
     </section>
 
-    <!-- Sezione di prova: serve solo a vedere il momento in cui la pagina riprende a scorrere -->
+    <!-- LAVORI IN EVIDENZA (Figma: componente "Lavori in evidenza V2")
+         1. quando il mouse entra nella sezione i lavori compaiono uno alla volta,
+            in ordine casuale (diverso a ogni caricamento);
+         2. passando sopra una card: la card va in primo piano e cresce del 10%,
+            a sinistra compare il titolo, a destra la descrizione. -->
+    <section class="lavori" id="lavori" aria-labelledby="lavori-titolo">
+      <div class="lavori__tavola">
+        <h2 class="lavori__titolo" id="lavori-titolo">
+          <a class="sottolinea" href="#lavori"><span>Lavori in evidenza</span></a>
+        </h2>
+
+        <!-- le card: l'ordine qui è quello dei livelli in Figma (dal basso verso l'alto) -->
+        <a class="lavoro" href="#" data-lavoro="magiantosa"   style="--x:551; --y:500; --w:200; --h:266; --z:1">
+          <img src="images/lavori/magiantosa.jpg" alt="Magiantosa, amaro all'arancia Arànciu" loading="lazy">
+        </a>
+        <a class="lavoro" href="#" data-lavoro="beach-soccer" style="--x:446; --y:130; --w:332; --h:250; --z:2">
+          <img src="images/lavori/beach-soccer.jpg" alt="Beach Soccer 2026, premiazione" loading="lazy">
+        </a>
+        <a class="lavoro" href="#" data-lavoro="infiorata"    style="--x:412; --y:314; --w:200; --h:280; --z:3">
+          <img src="images/lavori/infiorata.jpg" alt="Manifesto Infiorata di Noto 2026" loading="lazy">
+        </a>
+        <a class="lavoro" href="#" data-lavoro="heladero"     style="--x:514; --y:936; --w:166; --h:166; --z:4">
+          <img src="images/lavori/heladero.jpg" alt="Copertina Heladero, Warekes" loading="lazy">
+        </a>
+        <a class="lavoro" href="#" data-lavoro="world-cup"    style="--x:632; --y:686; --w:250; --h:333; --z:5">
+          <img src="images/lavori/world-cup.jpg" alt="Manifesto Shuttlecock World Cup, Italian Stage" loading="lazy">
+        </a>
+
+        <!-- titoli (a sinistra, tutti a x 43) e descrizioni (a destra, tutte a x 959) -->
+        <p class="lavori__nome" data-lavoro="beach-soccer" style="--y:176">Beach Soccer 2026</p>
+        <p class="lavori__nome" data-lavoro="infiorata"    style="--y:360">Infiorata di<br>Noto 2026</p>
+        <p class="lavori__nome" data-lavoro="magiantosa"   style="--y:571">Magiantosa</p>
+        <p class="lavori__nome" data-lavoro="world-cup"    style="--y:761">Italian Open &amp;<br>World Cup 2026</p>
+        <p class="lavori__nome" data-lavoro="heladero"     style="--y:974">Heladero Cover</p>
+
+        <p class="lavori__testo" data-lavoro="beach-soccer" style="--y:134">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
+        <p class="lavori__testo" data-lavoro="infiorata"    style="--y:316">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
+        <p class="lavori__testo" data-lavoro="magiantosa"   style="--y:503">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
+        <p class="lavori__testo" data-lavoro="world-cup"    style="--y:685">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
+        <p class="lavori__testo" data-lavoro="heladero"     style="--y:944">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
+      </div>
+    </section>
+
+    <!-- Sezione di prova: serve solo a vedere dove finisce la pagina -->
     <section class="next" id="chi-siamo">
       <p>Qui inizia la sezione successiva del sito.</p>
     </section>
@@ -70,5 +114,6 @@
   <div class="cursore" id="cursore" aria-hidden="true"><img src="images/puntatore.svg" alt=""></div>
 
   <script src="script.js"></script>
+  <script src="lavori.js"></script>
 </body>
 </html>
