@@ -21,6 +21,14 @@
      con lo scroll della pagina.
    Si sceglie con data-mobile="..." sulla <section class="lavori">,
    oppure per le prove aggiungendo all'indirizzo ?mobile=verticale
+
+   SU DESKTOP, SCROLL ORIZZONTALE: quando la sezione arriva in cima
+   allo schermo la pagina si ferma e ogni gesto di scroll (rotellina
+   o trackpad) fa avanzare il carosello di un progetto, con lo stesso
+   rimbalzo delle frecce. Finito il primo giro completo (si torna al
+   primo progetto) lo scroll verticale riparte normalmente.
+   Scrollando in su si torna indietro; dal primo progetto si esce
+   verso l'alto.
    ========================================================= */
 
 const CAROSELLO = {
@@ -31,6 +39,14 @@ const CAROSELLO = {
   avvio:        { durata: 350,  curva: "cubic-bezier(.55, 0, 1, .45)" },  // parte veloce
   assestamento: { durata: 1300, curva: "cubic-bezier(.16, 1, .3, 1)" },   // si posa morbida
   swipeMinimo: 40,                                 // px sullo schermo per contare uno swipe
+
+  // ⇩ DESKTOP: scroll orizzontale bloccato fino alla fine del primo giro
+  scrollOrizzontale: {
+    attivo: true,
+    pausaGesto: 150,     // ms di silenzio che separano due gesti di scroll
+    passoMinimo: 450,    // ms minimi tra un passo e il successivo
+    passoContinuo: 1300, // se lo scroll non si ferma mai, un passo ogni tot ms
+  },
 
   // ⇩ TELEFONO: effetto elastico del gap
   mobile: {
@@ -159,6 +175,48 @@ const CAROSELLO = {
       oss.disconnect();
     }
   }, { rootMargin: "800px 0px" }).observe(sezione);
+
+  // =========================================================
+  // DESKTOP: lo scroll della pagina diventa scroll orizzontale
+  // finché non si completa il primo giro del carosello
+  // =========================================================
+  const SO = CAROSELLO.scrollOrizzontale;
+  let giroFinito = false, ultimoEventoRuota = 0, ultimoPasso = 0;
+
+  function ruota(e) {
+    if (!SO.attivo || giroFinito || telefono.matches || riduci) return;
+    const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    if (Math.abs(delta) < 2) return;
+    const r = sezione.getBoundingClientRect();
+    const ora = performance.now();
+    const agganciata = Math.abs(r.top) < 2;
+
+    if (!agganciata) {
+      // sto scendendo e questo scroll porterebbe la sezione oltre la cima: la fermo esattamente lì
+      if (delta > 0 && r.top > 0 && r.top - delta <= 0) {
+        e.preventDefault();
+        window.scrollTo({ top: window.scrollY + r.top, behavior: "instant" });
+        ultimoEventoRuota = ora;
+        ultimoPasso = ora - SO.passoMinimo;   // il gesto successivo fa subito il primo passo
+      }
+      return;
+    }
+
+    // sezione agganciata in cima: dal primo progetto, scrollando in su, si esce
+    const fermo = animazioni.length === 0;
+    if (delta < 0 && indice % N === 0 && fermo) return;
+
+    e.preventDefault();
+    const nuovoGesto = ora - ultimoEventoRuota > SO.pausaGesto;
+    ultimoEventoRuota = ora;
+    const trascorso = ora - ultimoPasso;
+    if (!((nuovoGesto && trascorso > SO.passoMinimo) || trascorso > SO.passoContinuo)) return;
+
+    ultimoPasso = ora;
+    vai(delta > 0 ? 1 : -1);
+    if (delta > 0 && indice >= N) giroFinito = true;   // tornati al primo progetto: giro completo
+  }
+  window.addEventListener("wheel", ruota, { passive: false });
 
   // =========================================================
   // TELEFONO: gap elastico che segue lo scroll
