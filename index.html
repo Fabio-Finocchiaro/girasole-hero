@@ -16,11 +16,13 @@
 </head>
 <body>
 
+  <!-- LOGO: fuori dalla navbar così non va in negativo -->
+  <a class="logo-fisso" href="#" aria-label="WUP, torna all'inizio">
+    <img src="images/logo.svg" alt="WUP" width="82" height="30">
+  </a>
+
   <!-- BARRA DI NAVIGAZIONE (Figma: NAV BAR) -->
-  <header class="nav">
-    <a class="nav__logo" href="#" aria-label="WUP, torna all'inizio">
-      <img src="images/logo.svg" alt="WUP" width="82" height="30">
-    </a>
+  <header class="nav nav--solo-link">
     <nav class="nav__links" aria-label="Menu principale">
       <a class="pill" href="#"><span>Home</span></a>
       <a class="pill" href="#"><span>Portfolio</span></a>
@@ -61,46 +63,67 @@
       </div>
     </section>
 
-    <!-- LAVORI IN EVIDENZA (Figma: componente "Lavori in evidenza V2")
-         1. quando il mouse entra nella sezione i lavori compaiono uno alla volta,
-            in ordine casuale (diverso a ogni caricamento);
-         2. passando sopra una card: la card va in primo piano e cresce del 10%,
-            a sinistra compare il titolo, a destra la descrizione. -->
+    <!-- LAVORI IN EVIDENZA (Figma: componente "LAVORI IN EVIDENZA", carosello)
+         - le frecce fanno scorrere i progetti avanti e indietro, in loop;
+         - a ogni passaggio il gap tra le card si allarga e poi torna al suo posto (il "rimbalzo");
+         - il nome del progetto si vede solo sulla card di sinistra.
+         La versione precedente (cascata con hover) è in lavori-cascata.css / lavori-cascata.js. -->
     <section class="lavori" id="lavori" aria-labelledby="lavori-titolo">
-      <div class="lavori__tavola">
-        <h2 class="lavori__titolo" id="lavori-titolo">
-          <a class="sottolinea" href="#lavori"><span>Lavori in evidenza</span></a>
-        </h2>
+      <h2 class="lavori__titolo" id="lavori-titolo">Lavori in evidenza</h2>
 
-        <!-- le card: l'ordine qui è quello dei livelli in Figma (dal basso verso l'alto) -->
-        <a class="lavoro" href="#" data-lavoro="magiantosa"   style="--x:551; --y:500; --w:200; --h:266; --z:1">
-          <img src="images/lavori/magiantosa.jpg" alt="Magiantosa, amaro all'arancia Arànciu" loading="lazy">
-        </a>
-        <a class="lavoro" href="#" data-lavoro="beach-soccer" style="--x:446; --y:130; --w:332; --h:250; --z:2">
-          <img src="images/lavori/beach-soccer.jpg" alt="Beach Soccer 2026, premiazione" loading="lazy">
-        </a>
-        <a class="lavoro" href="#" data-lavoro="infiorata"    style="--x:412; --y:314; --w:200; --h:280; --z:3">
-          <img src="images/lavori/infiorata.jpg" alt="Manifesto Infiorata di Noto 2026" loading="lazy">
-        </a>
-        <a class="lavoro" href="#" data-lavoro="heladero"     style="--x:514; --y:936; --w:166; --h:166; --z:4">
-          <img src="images/lavori/heladero.jpg" alt="Copertina Heladero, Warekes" loading="lazy">
-        </a>
-        <a class="lavoro" href="#" data-lavoro="world-cup"    style="--x:632; --y:686; --w:250; --h:333; --z:5">
-          <img src="images/lavori/world-cup.jpg" alt="Manifesto Shuttlecock World Cup, Italian Stage" loading="lazy">
-        </a>
+      <div class="carosello-zona">
+        <div class="carosello" aria-roledescription="carosello" aria-label="Lavori in evidenza">
+        <div class="carosello__binario" id="binario">
+          <a class="card" href="#" data-lavoro="world-cup">
+            <div class="card__foto">
+              <img src="images/lavori/carosello-world-cup.jpg" alt="Shuttlecock World Cup, Italian Stage" width="1592" height="968">
+              <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
+            </div>
+            <p class="card__nome">Italian Open &amp; <br>World Cup 2025</p>
+          </a>
+          <a class="card" href="#" data-lavoro="infiorata">
+            <div class="card__foto">
+              <img src="images/lavori/carosello-infiorata.jpg" alt="Infiorata di Noto 2026, il pubblico davanti al pannello" width="1592" height="968" loading="lazy">
+              <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
+            </div>
+            <p class="card__nome">Infiorata di Noto <br>2026</p>
+          </a>
+          <a class="card" href="#" data-lavoro="beach-soccer">
+            <div class="card__foto">
+              <img src="images/lavori/carosello-beach-soccer.jpg" alt="Beach Soccer 2026, premiazione" width="1592" height="968" loading="lazy">
+              <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
+            </div>
+            <p class="card__nome">Beach Soccer 2026</p>
+          </a>
+          <a class="card" href="#" data-lavoro="magiantosa">
+            <div class="card__foto">
+              <img src="images/lavori/carosello-magiantosa.jpg" alt="Magiantosa, Lumia amaro al limone in riva al mare" width="1592" height="968" loading="lazy">
+              <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
+            </div>
+            <p class="card__nome">Magiantosa</p>
+          </a>
+          <!-- copie delle prime due card: servono solo al loop, non toccarle a mano -->
+          <a class="card" href="#" data-lavoro="world-cup" aria-hidden="true" tabindex="-1" data-copia>
+            <div class="card__foto">
+              <img src="images/lavori/carosello-world-cup.jpg" alt="" width="1592" height="968" loading="lazy">
+              <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
+            </div>
+            <p class="card__nome">Italian Open &amp; <br>World Cup 2025</p>
+          </a>
+          <a class="card" href="#" data-lavoro="infiorata" aria-hidden="true" tabindex="-1" data-copia>
+            <div class="card__foto">
+              <img src="images/lavori/carosello-infiorata.jpg" alt="" width="1592" height="968" loading="lazy">
+              <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
+            </div>
+            <p class="card__nome">Infiorata di Noto <br>2026</p>
+          </a>
+        </div>
+        </div>
 
-        <!-- titoli (a sinistra, tutti a x 43) e descrizioni (a destra, tutte a x 959) -->
-        <p class="lavori__nome" data-lavoro="beach-soccer" style="--y:176">Beach Soccer 2026</p>
-        <p class="lavori__nome" data-lavoro="infiorata"    style="--y:360">Infiorata di<br>Noto 2026</p>
-        <p class="lavori__nome" data-lavoro="magiantosa"   style="--y:571">Magiantosa</p>
-        <p class="lavori__nome" data-lavoro="world-cup"    style="--y:761">Italian Open &amp;<br>World Cup 2026</p>
-        <p class="lavori__nome" data-lavoro="heladero"     style="--y:974">Heladero Cover</p>
-
-        <p class="lavori__testo" data-lavoro="beach-soccer" style="--y:134">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
-        <p class="lavori__testo" data-lavoro="infiorata"    style="--y:316">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
-        <p class="lavori__testo" data-lavoro="magiantosa"   style="--y:503">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
-        <p class="lavori__testo" data-lavoro="world-cup"    style="--y:685">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
-        <p class="lavori__testo" data-lavoro="heladero"     style="--y:944">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Descrizione del progetto: cliente, ruolo e risultati. Sostituisci con il testo definitivo.</p>
+        <div class="carosello__frecce">
+          <button class="freccia" type="button" data-dir="-1" aria-label="Progetto precedente"><svg viewBox="0 0 45.168 44.448" preserveAspectRatio="none" fill="none" aria-hidden="true"><path d="M45.168 25.056H10.416L27.12 40.56L23.376 44.448L0 22.224V22.08L23.376 0L27.12 4.128L10.416 19.392H45.168V25.056Z" fill="currentColor"/></svg></button>
+          <button class="freccia" type="button" data-dir="1" aria-label="Progetto successivo"><svg viewBox="0 0 45.168 44.448" preserveAspectRatio="none" fill="none" aria-hidden="true"><path d="M0 19.392H34.752L18.048 3.888L21.792 0L45.168 22.224V22.368L21.792 44.448L18.048 40.32L34.752 25.056H0V19.392Z" fill="currentColor"/></svg></button>
+        </div>
       </div>
     </section>
 

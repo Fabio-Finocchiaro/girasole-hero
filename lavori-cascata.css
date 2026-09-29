@@ -1,0 +1,143 @@
+/* =========================================================
+   LAVORI IN EVIDENZA
+   Misure prese dal componente Figma "Lavori in evidenza V2"
+   (tavola larga 1440 px). --s è "un pixel di Figma" riscalato
+   sulla larghezza dello schermo, così la composizione resta
+   identica al design su qualsiasi monitor.
+   ========================================================= */
+
+.lavori {
+  --s: calc(100vw / 1440);
+  /* ⇩ IMPOSTAZIONI DELL'ANIMAZIONE (qui si fanno le prove) */
+  --comparsa-durata: .35s;                          /* ogni card che compare */
+  --hover-durata: .3s;                              /* entrata dell'hover */
+  --uscita-durata: .2s;                             /* uscita dell'hover */
+  --curva: cubic-bezier(.22, 1, .36, 1);            /* parte veloce, si posa morbida */
+
+  position: relative;
+  background: var(--bianco);
+  color: var(--nero);
+  overflow: hidden;                                 /* le card ingrandite non creano scroll orizzontale */
+}
+.lavori__tavola {
+  position: relative;
+  width: calc(var(--s) * 1440);
+  height: calc(var(--s) * 1180);                    /* la cascata scende fino a 1102 px */
+  margin-inline: auto;
+}
+
+/* ---------- TITOLO DELLA SEZIONE ---------- */
+/* Figma: Acumin VF Wide Semibold 48 → qui Archivo largo come ripiego */
+.lavori__titolo {
+  position: absolute;
+  left: calc(var(--s) * 52);
+  top: calc(var(--s) * 50);
+  font-size: calc(var(--s) * 48);
+  font-weight: 600;
+  font-stretch: 125%;
+  line-height: 1.4;
+  text-transform: uppercase;
+  z-index: 30;
+}
+.sottolinea { color: inherit; text-decoration: none; }
+/* stessa sottolineatura dei pulsanti della navbar */
+.sottolinea span { position: relative; }
+.sottolinea span::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -.06em;
+  height: max(1px, .045em);
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s ease;
+}
+.sottolinea:hover span::after,
+.sottolinea:focus-visible span::after { transform: scaleX(1); }
+.sottolinea:focus-visible { outline: none; }
+
+/* ---------- CARD ---------- */
+.lavoro {
+  position: absolute;
+  left: calc(var(--s) * var(--x));
+  top: calc(var(--s) * var(--y));
+  width: calc(var(--s) * var(--w));
+  height: calc(var(--s) * var(--h));
+  z-index: var(--z);
+  display: block;
+  /* stato iniziale: nascosta, 90% e 40 px più in basso */
+  opacity: 0;
+  transform: translateY(calc(var(--s) * 40)) scale(.9);
+  pointer-events: none;
+  transition:
+    opacity var(--comparsa-durata) var(--curva),
+    transform var(--comparsa-durata) var(--curva);
+}
+.lavoro.visibile {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.lavoro img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--uscita-durata) var(--curva);
+}
+/* hover: in primo piano e +10% */
+.lavoro.attivo { z-index: 20; }
+.lavoro.attivo img {
+  transform: scale(1.1);
+  transition-duration: var(--hover-durata);
+}
+.lavoro:focus-visible { outline: 2px solid var(--nero); outline-offset: 4px; }
+
+/* ---------- TITOLI DEI LAVORI (a sinistra) ---------- */
+/* Figma: Acumin VF Condensed Black 48 → qui Archivo stretto e nerissimo */
+.lavori__nome {
+  position: absolute;
+  left: calc(var(--s) * 43);
+  top: calc(var(--s) * var(--y));
+  z-index: 15;
+  font-size: calc(var(--s) * 48);
+  font-weight: 900;
+  font-stretch: 62%;
+  line-height: .9;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(calc(var(--s) * 24));
+  transition:
+    opacity var(--uscita-durata) var(--curva),
+    transform var(--uscita-durata) var(--curva);
+}
+
+/* ---------- DESCRIZIONI (a destra) ---------- */
+/* Figma: Acumin VF Regular 12 → qui Archivo normale */
+.lavori__testo {
+  position: absolute;
+  left: calc(var(--s) * 959);
+  top: calc(var(--s) * var(--y));
+  width: calc(var(--s) * 260);
+  z-index: 15;
+  font-size: max(11px, calc(var(--s) * 12));
+  font-weight: 400;
+  line-height: 1.4;
+  pointer-events: none;
+  /* la descrizione si svela dall'alto verso il basso */
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path var(--uscita-durata) var(--curva);
+}
+
+.lavori__nome.attivo,
+.lavori__testo.attivo { transition-duration: var(--hover-durata); }
+.lavori__nome.attivo { opacity: 1; transform: none; }
+.lavori__testo.attivo { clip-path: inset(0 0 0 0); }
+
+/* ---------- Chi preferisce meno animazioni ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .lavoro, .lavoro img, .lavori__nome, .lavori__testo { transition: none; }
+}

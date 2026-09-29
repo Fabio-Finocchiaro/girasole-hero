@@ -11,6 +11,9 @@ Il girasole ruota seguendo lo scroll, il motto "is gonna be real" compare parola
 - `images/frames/desktop/`: 150 fotogrammi WebP con trasparenza (1080 × 1580)
 - `images/frames/mobile/`: gli stessi fotogrammi a metà risoluzione, per il telefono
 - `images/*.svg`: parole del motto e logo
+- `lavori.css` + `lavori.js`: sezione "Lavori in evidenza" a carosello (frecce, loop, rimbalzo del gap); le impostazioni dell'animazione sono in cima a `lavori.js`
+- `images/lavori/carosello-*.jpg`: foto delle card del carosello (esportate da Figma a 2x)
+- `lavori-cascata.html` + `lavori-cascata.css` + `lavori-cascata.js`: versione precedente della sezione (cascata con hover), tenuta per confronto
 
 ## Note per gli sviluppatori
 - Tecnica: sequenza di fotogrammi disegnata su `<canvas>`, guidata dalla posizione di scroll dentro una sezione `sticky`.

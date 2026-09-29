@@ -1,143 +1,205 @@
 /* =========================================================
-   LAVORI IN EVIDENZA
-   Misure prese dal componente Figma "Lavori in evidenza V2"
+   LAVORI IN EVIDENZA — carosello
+   Misure prese dal componente Figma "LAVORI IN EVIDENZA"
    (tavola larga 1440 px). --s è "un pixel di Figma" riscalato
    sulla larghezza dello schermo, così la composizione resta
    identica al design su qualsiasi monitor.
+
+   Padding VOLUTO: 100 px a sinistra, 0 a destra.
+   La card che esce a sinistra viene tagliata al bordo dei 100 px,
+   quella di destra esce dallo schermo.
+
+   Le impostazioni dell'animazione (durate, curve, gap del
+   rimbalzo) sono in cima a lavori.js.
    ========================================================= */
 
 .lavori {
   --s: calc(100vw / 1440);
-  /* ⇩ IMPOSTAZIONI DELL'ANIMAZIONE (qui si fanno le prove) */
-  --comparsa-durata: .35s;                          /* ogni card che compare */
-  --hover-durata: .3s;                              /* entrata dell'hover */
-  --uscita-durata: .2s;                             /* uscita dell'hover */
-  --curva: cubic-bezier(.22, 1, .36, 1);            /* parte veloce, si posa morbida */
-
   position: relative;
   background: var(--bianco);
   color: var(--nero);
-  overflow: hidden;                                 /* le card ingrandite non creano scroll orizzontale */
-}
-.lavori__tavola {
-  position: relative;
-  width: calc(var(--s) * 1440);
-  height: calc(var(--s) * 1180);                    /* la cascata scende fino a 1102 px */
-  margin-inline: auto;
+  padding: calc(var(--s) * 50) 0 calc(var(--s) * 99) calc(var(--s) * 100);
+  overflow: hidden;
 }
 
 /* ---------- TITOLO DELLA SEZIONE ---------- */
 /* Figma: Acumin VF Wide Semibold 48 → qui Archivo largo come ripiego */
 .lavori__titolo {
-  position: absolute;
-  left: calc(var(--s) * 52);
-  top: calc(var(--s) * 50);
-  font-size: calc(var(--s) * 48);
+  font-size: max(24px, calc(var(--s) * 48));
   font-weight: 600;
   font-stretch: 125%;
   line-height: 1.4;
   text-transform: uppercase;
-  z-index: 30;
+  margin-bottom: calc(var(--s) * 25);
 }
-.sottolinea { color: inherit; text-decoration: none; }
-/* stessa sottolineatura dei pulsanti della navbar */
-.sottolinea span { position: relative; }
-.sottolinea span::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0;
-  bottom: -.06em;
-  height: max(1px, .045em);
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .3s ease;
+
+/* ---------- FINESTRA E BINARIO ---------- */
+.carosello {
+  position: relative;
+  overflow: hidden;                   /* taglia a sinistra al bordo dei 100 px */
+  touch-action: pan-y;                /* sul telefono lo swipe orizzontale lo gestiamo noi */
 }
-.sottolinea:hover span::after,
-.sottolinea:focus-visible span::after { transform: scaleX(1); }
-.sottolinea:focus-visible { outline: none; }
+.carosello__binario {
+  display: flex;
+  column-gap: calc(var(--s) * 20);    /* gap a riposo (nel rimbalzo sale a 45) */
+  width: max-content;
+  will-change: transform;
+}
 
 /* ---------- CARD ---------- */
-.lavoro {
-  position: absolute;
-  left: calc(var(--s) * var(--x));
-  top: calc(var(--s) * var(--y));
-  width: calc(var(--s) * var(--w));
-  height: calc(var(--s) * var(--h));
-  z-index: var(--z);
+.card {
+  flex: none;
+  width: calc(var(--s) * 796);
+  color: inherit;
+  text-decoration: none;
   display: block;
-  /* stato iniziale: nascosta, 90% e 40 px più in basso */
-  opacity: 0;
-  transform: translateY(calc(var(--s) * 40)) scale(.9);
-  pointer-events: none;
-  transition:
-    opacity var(--comparsa-durata) var(--curva),
-    transform var(--comparsa-durata) var(--curva);
 }
-.lavoro.visibile {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
+.card__foto {
+  position: relative;
+  height: calc(var(--s) * 484);
+  overflow: hidden;
 }
-.lavoro img {
+.card__foto img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--uscita-durata) var(--curva);
 }
-/* hover: in primo piano e +10% */
-.lavoro.attivo { z-index: 20; }
-.lavoro.attivo img {
-  transform: scale(1.1);
-  transition-duration: var(--hover-durata);
-}
-.lavoro:focus-visible { outline: 2px solid var(--nero); outline-offset: 4px; }
+.card:focus-visible { outline: 2px solid var(--nero); outline-offset: 4px; }
 
-/* ---------- TITOLI DEI LAVORI (a sinistra) ---------- */
-/* Figma: Acumin VF Condensed Black 48 → qui Archivo stretto e nerissimo */
-.lavori__nome {
+/* etichette gialle (Figma: Tags2) */
+.card__tag {
   position: absolute;
-  left: calc(var(--s) * 43);
-  top: calc(var(--s) * var(--y));
-  z-index: 15;
-  font-size: calc(var(--s) * 48);
-  font-weight: 900;
-  font-stretch: 62%;
-  line-height: .9;
+  left: calc(var(--s) * 50);
+  top: calc(var(--s) * 25);
+  display: flex;
+  gap: max(3px, calc(var(--s) * 5));
+  list-style: none;
+}
+.card__tag li {
+  background: var(--giallo);
+  color: var(--nero);
+  padding: max(2px, calc(var(--s) * 4)) max(3px, calc(var(--s) * 5));
+  font-size: max(8px, calc(var(--s) * 10));
+  font-weight: 300;
+  font-stretch: 125%;
+  line-height: 1.2;
   text-transform: uppercase;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateX(calc(var(--s) * 24));
-  transition:
-    opacity var(--uscita-durata) var(--curva),
-    transform var(--uscita-durata) var(--curva);
 }
 
-/* ---------- DESCRIZIONI (a destra) ---------- */
-/* Figma: Acumin VF Regular 12 → qui Archivo normale */
-.lavori__testo {
-  position: absolute;
-  left: calc(var(--s) * 959);
-  top: calc(var(--s) * var(--y));
-  width: calc(var(--s) * 260);
-  z-index: 15;
-  font-size: max(11px, calc(var(--s) * 12));
+/* nome del progetto: si vede solo sulla card di sinistra (gestito da lavori.js) */
+/* Figma: Acumin VF Wide 48 → Archivo largo */
+.card__nome {
+  margin-top: calc(var(--s) * 25);
+  width: calc(var(--s) * 615);
+  min-height: calc(var(--s) * 127);
+  font-size: max(16px, calc(var(--s) * 48));
   font-weight: 400;
-  line-height: 1.4;
-  pointer-events: none;
-  /* la descrizione si svela dall'alto verso il basso */
-  clip-path: inset(0 0 100% 0);
-  transition: clip-path var(--uscita-durata) var(--curva);
+  font-stretch: 125%;
+  line-height: 1.2;
+  text-transform: uppercase;
+  opacity: 0;
 }
+.card.attiva .card__nome { opacity: 1; }
 
-.lavori__nome.attivo,
-.lavori__testo.attivo { transition-duration: var(--hover-durata); }
-.lavori__nome.attivo { opacity: 1; transform: none; }
-.lavori__testo.attivo { clip-path: inset(0 0 0 0); }
+/* ---------- FRECCE ---------- */
+/* Figma: gruppo "Frecce" sopra le foto, gialle, 75 × 74.
+   Parte 85 px a sinistra della finestra (dentro il padding),
+   largo 1409 px con 50 px di margine a destra.
+   Centrate in verticale sulle foto. */
+.carosello-zona { position: relative; }
+.carosello__frecce {
+  position: absolute;
+  z-index: 2;
+  left: calc(var(--s) * -85);
+  top: calc(var(--s) * 239);
+  transform: translateY(-50%);
+  width: calc(var(--s) * 1409);
+  padding-right: calc(var(--s) * 50);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;               /* tra le due frecce si può cliccare la card */
+}
+.freccia {
+  display: block;
+  width: max(32px, calc(var(--s) * 75));
+  aspect-ratio: 75 / 74;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--giallo);
+  pointer-events: auto;
+  transition: transform .25s cubic-bezier(.22, 1, .36, 1);
+}
+/* hover: la freccia cresce del 10% */
+@media (hover: hover) {
+  .freccia:hover { transform: scale(1.1); }
+}
+.freccia svg { display: block; width: 100%; height: 100%; }
+.freccia:focus-visible { outline: 2px solid var(--giallo); outline-offset: 4px; }
 
-/* ---------- Chi preferisce meno animazioni ---------- */
-@media (prefers-reduced-motion: reduce) {
-  .lavoro, .lavoro img, .lavori__nome, .lavori__testo { transition: none; }
+/* =========================================================
+   TELEFONO (schermo verticale) — card "Card tipologia 4" di Figma
+   Tavola mobile larga 430: --t è "un pixel" di quella tavola.
+   Niente frecce: le card si muovono con lo scroll (vedi lavori.js).
+   ========================================================= */
+@media (orientation: portrait) {
+  .lavori {
+    --t: calc(100vw / 430);
+    padding: calc(var(--t) * 40) 0 calc(var(--t) * 60) var(--margine);
+  }
+  .lavori__titolo { margin-bottom: calc(var(--t) * 20); }
+
+  .carosello__frecce,
+  .card[data-copia] { display: none; }
+
+  .carosello__binario {
+    transform: none !important;       /* sul telefono la fila non si sposta via JS */
+    column-gap: calc(var(--t) * 20);
+  }
+
+  /* card: foto 290 × 400, etichette in basso a sinistra, nome sotto */
+  .card { width: calc(var(--t) * 290); will-change: transform; }
+  .card__foto { height: calc(var(--t) * 400); }
+  .card__tag {
+    left: calc(var(--t) * 16);
+    top: calc(var(--t) * 356);
+    gap: 5px;
+  }
+  .card__tag li { padding: 4px 5px; font-size: 10px; }
+
+  /* Figma: Acumin VF ExtraCondensed Bold 32 → Archivo strettissimo e nero */
+  .card__nome {
+    opacity: 1;
+    margin-top: calc(var(--t) * 10);
+    width: calc(var(--t) * 235);
+    min-height: 0;
+    font-size: calc(var(--t) * 32);
+    font-weight: 800;
+    font-stretch: 62%;
+    line-height: 1;
+  }
+  .card__nome br { display: none; }   /* sul telefono il titolo va a capo da solo */
+
+  /* ---------- versione ORIZZONTALE: si trascina col dito ---------- */
+  .lavori[data-mobile="orizzontale"] .carosello {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    touch-action: auto;
+    scrollbar-width: none;
+  }
+  .lavori[data-mobile="orizzontale"] .carosello::-webkit-scrollbar { display: none; }
+  .lavori[data-mobile="orizzontale"] .carosello__binario { padding-right: var(--margine); }
+  .lavori[data-mobile="orizzontale"] .card { scroll-snap-align: start; }
+
+  /* ---------- versione VERTICALE: una sotto l'altra, segue lo scroll della pagina ---------- */
+  .lavori[data-mobile="verticale"] .carosello { overflow: visible; }
+  .lavori[data-mobile="verticale"] .carosello__binario {
+    flex-direction: column;
+    width: auto;
+    row-gap: calc(var(--t) * 40);
+  }
 }

@@ -43,6 +43,23 @@ body {
 .nav__logo img { display: block; width: 82px; height: 30px; }
 .nav__links { display: flex; gap: max(16px, calc(var(--u) * 93)); }
 
+/* Logo FUORI dalla navbar: la navbar va in "negativo" (mix-blend-mode),
+   il logo invece resta sempre con i suoi colori.
+   Stessa altezza e stesso margine della navbar, quindi sta esattamente
+   dove stava prima. */
+.nav--solo-link { justify-content: flex-end; }
+.logo-fisso {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  height: max(64px, calc(var(--u) * 100));
+  padding-left: max(20px, calc(var(--u) * 50));
+  display: flex;
+  align-items: center;
+}
+.logo-fisso img { display: block; width: 82px; height: 30px; }
+
 .pill {
   display: inline-flex;
   align-items: center;
@@ -214,6 +231,7 @@ html.cursore-attivo .cursore { opacity: 1; }
     --m: calc((100vw - 40px) / 655);
   }
   .nav { padding: 0 var(--margine); }
+  .logo-fisso { padding-left: var(--margine); }
   .stage { width: 100vw; height: 100dvh; }
   .flower {
     left: 50%;
