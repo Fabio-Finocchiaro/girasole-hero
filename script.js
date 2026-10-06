@@ -1,5 +1,12 @@
 /* =========================================================
-   Girasole che ruota con lo scroll — VERSIONE PARALLASSE
+   Girasole — VERSIONE PARALLASSE, ANIMAZIONE AUTOMATICA
+   - IN DISCESA dall'inizio della pagina: al primo gesto di scroll
+     (rotellina, trackpad, dito, frecce, barra spaziatrice) la pagina
+     scorre DA SOLA fino alla fine della hero in "durata" ms e
+     l'animazione si esegue in modo fluido;
+   - IN SALITA: l'animazione segue lo scroll a mano, come prima
+     (si "riavvolge"); tornati in cima, il prossimo scroll in giù
+     riparte da solo.
    Il fiore parte grande e al centro, poi si allontana (zoom out)
    e scivola al suo posto mentre ruota. La scritta si muove a
    una velocità diversa: da qui la sensazione di profondità.
@@ -13,6 +20,8 @@
 // ---------- IMPOSTAZIONI (qui si fanno le prove) ----------
 const IMPOSTAZIONI = {
   numeroFotogrammi: 150,     // Girasole_00000 … 00149
+  // ⇩ quanto dura l'animazione AUTOMATICA (dal primo scroll in giù alla tappa finale)
+  durata: 2500,              // ms
   // a che punto dello scroll (0 = inizio, 1 = fine) il fiore ha finito di girare
   fineRotazione: 0.85,
   // morbidezza: 1 = segue lo scroll secco, 0.1 = molto fluido
@@ -42,7 +51,7 @@ const canvas = document.getElementById("girasole");
 const ctx = canvas.getContext("2d");
 const loader = document.getElementById("loader");
 const hint = document.getElementById("hint");
-const parole = [...document.querySelectorAll(".word img")];
+const parole = [...document.querySelectorAll(".word img, .word svg")];
 const fiore = document.querySelector(".flower");
 const motto = document.querySelector(".motto");
 const stage = document.querySelector(".stage");
@@ -81,15 +90,73 @@ async function caricaTutto() {
   });
   await Promise.all(lavoratori);
   loader.style.opacity = 0;
-  if (window.scrollY < 10) hint.style.opacity = 1;
+  tuttoCaricato = true;
+  if (stato === "attesa") {
+    if (richiesta) avviaAnimazione();
+    else hint.style.opacity = 1;
+  }
 }
 
 // ---------- 2. QUANTO HO SCROLLATO NELLA HERO ----------
+// l'animazione segue lo scroll (come prima): così tornando su si "riavvolge" a mano.
+// Il tratto di scroll finisce esattamente all'ultima tappa: niente zone morte.
+const ultimaTappa = Math.max(IMPOSTAZIONI.fineRotazione, IMPOSTAZIONI.fineZoom, ...IMPOSTAZIONI.parole.map((t) => t[1]));
+const corsaHero = () => hero.offsetHeight - window.innerHeight;
 function progresso() {
   const r = hero.getBoundingClientRect();
-  const corsa = hero.offsetHeight - window.innerHeight;
-  return Math.min(1, Math.max(0, -r.top / corsa));
+  return Math.min(1, Math.max(0, -r.top / corsaHero())) * ultimaTappa;
 }
+
+// ---------- AUTOMATICO IN DISCESA ----------
+// dall'inizio della pagina, il primo gesto verso il basso fa scorrere la pagina DA SOLA fino
+// alla fine della hero in "durata" ms (l'animazione si esegue mentre scorre); intanto la pagina
+// non risponde ad altri gesti. Tornando su invece si scorre a mano. Di nuovo in cima: si riparte.
+let stato = "attesa";        // "attesa" (in cima) → "automatico" → "manuale"
+let richiesta = false, tuttoCaricato = false, animAuto = 0;
+
+function avviaAnimazione() {
+  if (stato !== "attesa") return;
+  if (!tuttoCaricato) { richiesta = true; return; }   // parte appena i fotogrammi sono pronti
+  stato = "automatico";
+  hint.style.opacity = 0;
+  const da = window.scrollY;
+  const a = hero.offsetTop + corsaHero();
+  const t0 = performance.now();
+  const curva = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);   // parte e arriva morbida
+  const passo = (ora) => {
+    const t = Math.min(1, (ora - t0) / IMPOSTAZIONI.durata);
+    window.scrollTo({ top: da + (a - da) * curva(t), behavior: "instant" });
+    if (t < 1) animAuto = requestAnimationFrame(passo);
+    else stato = "manuale";
+  };
+  animAuto = requestAnimationFrame(passo);
+}
+
+const inCima = () => window.scrollY <= 2;
+window.addEventListener("wheel", (e) => {
+  if (stato === "automatico") { e.preventDefault(); return; }
+  if (stato === "attesa" && e.deltaY > 0 && inCima()) { e.preventDefault(); avviaAnimazione(); }
+}, { passive: false });
+let toccoY = null;
+window.addEventListener("touchstart", (e) => { toccoY = e.touches[0].clientY; }, { passive: true });
+window.addEventListener("touchmove", (e) => {
+  if (stato === "automatico") { e.preventDefault(); return; }
+  if (stato !== "attesa" || toccoY === null || !inCima()) return;
+  const su = toccoY - e.touches[0].clientY;      // > 0 = il dito va su = la pagina andrebbe giù
+  if (su > 0) e.preventDefault();
+  if (su > 10) avviaAnimazione();
+}, { passive: false });
+window.addEventListener("keydown", (e) => {
+  const giu = ["ArrowDown", "PageDown", " ", "End"].includes(e.key);
+  if (stato === "automatico" && (giu || ["ArrowUp", "PageUp", "Home"].includes(e.key))) { e.preventDefault(); return; }
+  if (stato === "attesa" && giu && inCima()) { e.preventDefault(); avviaAnimazione(); }
+});
+window.addEventListener("scroll", () => {
+  if (stato === "automatico") return;
+  if (inCima()) stato = "attesa";            // tornati in cima: il prossimo scroll in giù riparte da solo
+  else if (stato === "attesa") stato = "manuale";   // scesi in altro modo (link, barra di scorrimento…)
+}, { passive: true });
+if (!inCima() || riduciMovimento) stato = "manuale";
 
 // da un intervallo [a, b] a un valore 0→1, con partenza e arrivo morbidi
 function tratto(p, a, b) {
@@ -159,6 +226,11 @@ function aggiorna() {
     const [a, b] = IMPOSTAZIONI.parole[k];
     el.style.setProperty("--in", riduciMovimento ? 1 : tratto(p, a, b).toFixed(3));
   });
+
+  // la scritta è "in transizione" finché non è arrivata al suo posto con tutte le parole:
+  // in quella fase mescola.js non rimescola le lettere
+  const ferma = resto === 0 && parole.every((el) => el.style.getPropertyValue("--in") === "1.000" || riduciMovimento);
+  motto.classList.toggle("in-transizione", !ferma);
 
   if (p > 0.01) hint.style.opacity = 0;
   requestAnimationFrame(aggiorna);

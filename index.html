@@ -6,13 +6,18 @@
   <title>WUP — Is gonna be real</title>
   <meta name="description" content="Prototipo della hero section WUP: il girasole ruota seguendo lo scroll.">
 
-  <!-- Font di ripiego per i pulsanti: nel design è Acumin VF Wide Semibold (Adobe Fonts) -->
+  <!-- FONT DEL SITO: Acumin VF da Adobe Fonts (kit "WUP sito - Acumin VF", id ruk5xrr).
+       Il kit funziona solo sui domini registrati su fonts.adobe.com: ora localhost,
+       127.0.0.1 e file://. Quando il sito va online, aggiungere lì il dominio vero. -->
+  <link rel="stylesheet" href="https://use.typekit.net/ruk5xrr.css">
+  <!-- Archivo: ripiego se Acumin non si carica -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="lavori.css">
+  <link rel="stylesheet" href="chi-siamo.css">
 </head>
 <body>
 
@@ -38,15 +43,18 @@
       <div class="hero__sticky">
         <div class="stage">
 
-          <!-- LIVELLO 1: la scritta, DIETRO al fiore -->
-          <h1 class="motto" aria-label="Is gonna be real">
+          <!-- LIVELLO 1: la scritta, DIETRO al fiore.
+               Le parole sono SVG scritti qui dentro (non <img>) così mescola.js
+               può spostare le singole lettere al passaggio del mouse.
+               Originali in images/is.svg, gonna.svg, be.svg, real.svg -->
+          <h1 class="motto in-transizione" aria-label="Is gonna be real">
             <span class="motto__row">
-              <span class="word" data-word="0"><img src="images/is.svg" alt="" class="w-is"></span>
-              <span class="word" data-word="1"><img src="images/gonna.svg" alt="" class="w-gonna"></span>
+              <span class="word" data-mescola data-word="0"><svg class="w-is" aria-hidden="true" focusable="false" width="124" height="140" viewBox="0 0 124 140" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 2.10001H24.4V137.5H0V2.10001Z" fill="#FDD200"/><path d="M82.6 120.6C85.5334 120.6 88.0667 120.2 90.2 119.4C92.3334 118.467 94 117.267 95.2 115.8C96.4 114.2 97.3334 112.333 98 110.2C98.6667 107.933 99 105.6 99 103.2C99 99.4667 98.2667 96.2 96.8 93.4C95.4667 90.6 93.1334 87.9333 89.8 85.4C86.4667 82.7333 82 80.0667 76.4 77.4C70.5334 74.6 65.5334 71.8667 61.4 69.2C57.4 66.4 54.1334 63.4667 51.6 60.4C49.0667 57.2 47.2 53.6667 46 49.8C44.8 45.9333 44.2 41.4667 44.2 36.4C44.2 31.0667 45 26.2 46.6 21.8C48.2 17.2667 50.6667 13.4 54 10.2C57.3334 6.86667 61.3334 4.33334 66 2.60001C70.8 0.866671 76.3334 0 82.6 0C88.6 0 93.7334 0.733333 98 2.2C102.4 3.66667 106.067 5.66667 109 8.2C111.933 10.7333 114.2 13.6667 115.8 17C117.533 20.3333 118.733 23.8667 119.4 27.6C120.2 31.2 120.667 34.7333 120.8 38.2H97.2C96.9334 36.2 96.5334 34.1333 96 32C95.6 29.7333 94.8667 27.6 93.8 25.6C92.7334 23.6 91.2667 22.0667 89.4 21C87.5334 19.8 85.0667 19.2 82 19.2C78.9334 19.2 76.3334 19.8667 74.2 21.2C72.2 22.4 70.6667 24.1333 69.6 26.4C68.6667 28.6667 68.2 31.3333 68.2 34.4C68.2 37.6 68.8 40.4 70 42.8C71.2 45.2 73.2 47.4 76 49.4C78.9334 51.4 83.0667 53.6 88.4 56C94.5334 58.9333 99.7334 61.8667 104 64.8C108.4 67.6 112 70.7333 114.8 74.2C117.733 77.5333 119.867 81.4 121.2 85.8C122.667 90.2 123.4 95.2667 123.4 101C123.4 106.2 122.533 111.2 120.8 116C119.2 120.667 116.667 124.8 113.2 128.4C109.867 131.867 105.6 134.6 100.4 136.6C95.2 138.6 89 139.6 81.8 139.6C74.0667 139.6 67.5334 138.533 62.2 136.4C57 134.133 52.8 131.133 49.6 127.4C46.5334 123.533 44.2667 119.2 42.8 114.4C41.4667 109.6 40.6667 104.667 40.4 99.6H64.4C64.8 103.2 65.6 106.667 66.8 110C68.1334 113.2 70.0667 115.8 72.6 117.8C75.1334 119.667 78.4667 120.6 82.6 120.6Z" fill="#FDD200"/></svg></span>
+              <span class="word" data-mescola data-word="1"><svg class="w-gonna" aria-hidden="true" focusable="false" width="464" height="140" viewBox="0 0 464 140" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M80.2133 64.6L64.6133 138H52.8133C52.9467 137.2 53.08 136.267 53.2133 135.2C53.3467 134.133 53.48 133 53.6133 131.8C53.88 130.6 54.1467 129.4 54.4133 128.2C54.68 126.867 54.9467 125.533 55.2133 124.2C53.3467 127.4 51.2133 130.133 48.8133 132.4C46.4133 134.667 43.48 136.467 40.0133 137.8C36.68 139.133 32.6133 139.8 27.8133 139.8C20.48 139.8 14.68 137.933 10.4133 134.2C6.14666 130.333 3.21333 125.067 1.61333 118.4C0.146662 111.6 -0.319999 103.733 0.213334 94.8C0.746668 85.7334 2.08 75.9333 4.21333 65.4C6.48 55.4 9.01334 46.7333 11.8133 39.4C14.6133 31.9333 17.68 25.7333 21.0133 20.8C24.3467 15.7333 27.88 11.7333 31.6133 8.80001C35.48 5.73334 39.3467 3.53334 43.2133 2.20001C47.2133 0.733337 51.28 0 55.4133 0C61.4133 0 66.28 0.933333 70.0133 2.8C73.88 4.66667 76.88 7 79.0133 9.80001C81.28 12.6 82.88 15.6 83.8133 18.8C84.7467 22 85.28 25.0667 85.4133 28C85.68 30.9333 85.7467 33.4 85.6133 35.4H71.4133C71.4133 34.2 71.4133 32.3333 71.4133 29.8C71.4133 27.2667 70.9467 24.7333 70.0133 22.2C69.2133 19.5333 67.5467 17.2667 65.0133 15.4C62.6133 13.5333 59.0133 12.6 54.2133 12.6C51.0133 12.6 48.0133 13.3333 45.2133 14.8C42.4133 16.2667 39.68 18.4667 37.0133 21.4C34.48 24.2 32.08 27.8 29.8133 32.2C27.5467 36.4667 25.48 41.4 23.6133 47C21.88 52.6 20.28 58.9333 18.8133 66C17.48 72 16.3467 77.9333 15.4133 83.8C14.6133 89.5333 14.1467 95.0667 14.0133 100.4C14.0133 105.6 14.5467 110.267 15.6133 114.4C16.8133 118.4 18.68 121.6 21.2133 124C23.88 126.267 27.5467 127.4 32.2133 127.4C37.28 127.4 41.4133 126.2 44.6133 123.8C47.9467 121.267 50.6133 118.067 52.6133 114.2C54.7467 110.333 56.48 106.067 57.8133 101.4C59.28 96.7333 60.4133 92.2 61.2133 87.8L63.4133 77.6H40.4133L43.0133 64.6H80.2133Z" fill="white"/><path d="M139.8 0C146.467 0 151.933 1.4 156.2 4.2C160.6 6.86667 163.867 10.6 166 15.4C168.267 20.2 169.733 25.8 170.4 32.2C171.067 38.4667 171 45.2667 170.2 52.6C169.533 59.9333 168.333 67.6 166.6 75.6C165.133 82.8 163.333 89.6667 161.2 96.2C159.067 102.733 156.533 108.667 153.6 114C150.8 119.333 147.6 123.933 144 127.8C140.533 131.667 136.533 134.667 132 136.8C127.6 138.8 122.6 139.8 117 139.8C110.2 139.8 104.6 138.4 100.2 135.6C95.7999 132.8 92.4666 129 90.1999 124.2C87.9333 119.267 86.5333 113.667 85.9999 107.4C85.4666 101 85.5999 94.2 86.3999 87C87.1999 79.8 88.3333 72.4667 89.7999 65C91.2666 58.7333 92.9999 52.4667 94.9999 46.2C96.9999 39.9333 99.3333 34.0667 102 28.6C104.8 23.1333 108 18.2667 111.6 14C115.333 9.6 119.533 6.2 124.2 3.80001C128.867 1.26667 134.067 0 139.8 0ZM138.8 13C135.067 13 131.667 13.9333 128.6 15.8C125.533 17.6667 122.733 20.3333 120.2 23.8C117.8 27.2667 115.6 31.2667 113.6 35.8C111.6 40.3333 109.8 45.2667 108.2 50.6C106.733 55.9333 105.4 61.3333 104.2 66.8C102.6 74.8 101.4 82.4 100.6 89.6C99.9333 96.8 99.9333 103.2 100.6 108.8C101.267 114.4 103 118.867 105.8 122.2C108.6 125.4 112.667 127 118 127C121.467 127 124.667 126.267 127.6 124.8C130.533 123.2 133.2 120.933 135.6 118C138 114.933 140.2 111.267 142.2 107C144.2 102.6 146 97.6667 147.6 92.2C149.333 86.7333 150.933 80.6667 152.4 74C154 66.5333 155.267 59.2 156.2 52C157.133 44.6667 157.333 38.0667 156.8 32.2C156.267 26.3333 154.6 21.6667 151.8 18.2C149 14.7333 144.667 13 138.8 13Z" fill="white"/><path d="M184.654 137.9H170.854L199.854 1.89999H217.454C220.388 17.2333 222.921 30.5667 225.054 41.9C227.188 53.2333 228.921 62.9667 230.254 71.1C231.721 79.2333 232.921 86.1 233.854 91.7C234.788 97.1667 235.521 101.633 236.055 105.1C236.588 108.567 236.988 111.233 237.254 113.1C237.521 114.967 237.788 116.5 238.054 117.7C238.588 114.1 239.255 110.3 240.055 106.3C240.854 102.3 241.654 98.1667 242.454 93.9C243.254 89.5 244.121 85.1 245.054 80.7C245.988 76.1667 246.854 71.7 247.654 67.3C248.588 62.7667 249.521 58.3 250.454 53.9L261.654 1.89999H275.055L246.254 137.9H229.454C226.921 124.167 224.654 112.033 222.654 101.5C220.788 90.8333 219.121 81.5 217.654 73.5C216.321 65.5 215.121 58.5667 214.055 52.7C213.121 46.8333 212.321 41.9667 211.654 38.1C211.121 34.1 210.588 30.8333 210.054 28.3C209.654 25.7667 209.388 23.7667 209.254 22.3C209.121 20.8333 208.988 19.6333 208.854 18.7H208.654C208.121 22.0333 207.454 25.7 206.654 29.7C205.988 33.5667 205.254 37.7667 204.454 42.3C203.654 46.7 202.788 51.2333 201.854 55.9C200.921 60.5667 199.921 65.3667 198.854 70.3C197.921 75.2333 196.921 80.1 195.854 84.9L184.654 137.9Z" fill="white"/><path d="M288.855 137.9H275.055L304.055 1.89999H321.655C324.588 17.2333 327.121 30.5667 329.255 41.9C331.388 53.2333 333.121 62.9667 334.455 71.1C335.921 79.2333 337.121 86.1 338.055 91.7C338.988 97.1667 339.721 101.633 340.255 105.1C340.788 108.567 341.188 111.233 341.455 113.1C341.721 114.967 341.988 116.5 342.255 117.7C342.788 114.1 343.455 110.3 344.255 106.3C345.055 102.3 345.855 98.1667 346.655 93.9C347.455 89.5 348.321 85.1 349.255 80.7C350.188 76.1667 351.055 71.7 351.855 67.3C352.788 62.7667 353.721 58.3 354.655 53.9L365.855 1.89999H379.255L350.455 137.9H333.655C331.121 124.167 328.855 112.033 326.855 101.5C324.988 90.8333 323.321 81.5 321.855 73.5C320.521 65.5 319.321 58.5667 318.255 52.7C317.321 46.8333 316.521 41.9667 315.855 38.1C315.321 34.1 314.788 30.8333 314.255 28.3C313.855 25.7667 313.588 23.7667 313.455 22.3C313.321 20.8333 313.188 19.6333 313.055 18.7H312.855C312.321 22.0333 311.655 25.7 310.855 29.7C310.188 33.5667 309.455 37.7667 308.655 42.3C307.855 46.7 306.988 51.2333 306.055 55.9C305.121 60.5667 304.121 65.3667 303.055 70.3C302.121 75.2333 301.121 80.1 300.055 84.9L288.855 137.9Z" fill="white"/><path d="M448.055 94.7H413.055L394.055 137.9H379.255L439.655 1.89999H459.055L463.055 137.9H448.855L448.055 94.7ZM418.255 81.9H447.655C447.521 73.1 447.388 65.1667 447.255 58.1C447.121 50.9 446.988 44.5 446.855 38.9C446.721 33.1667 446.655 28.2333 446.655 24.1C446.655 19.9667 446.788 16.5 447.055 13.7H446.455C445.388 16.9 443.921 20.8333 442.055 25.5C440.188 30.1667 437.988 35.4333 435.455 41.3C433.055 47.1667 430.388 53.5 427.455 60.3C424.655 67.1 421.588 74.3 418.255 81.9Z" fill="white"/></svg></span>
             </span>
             <span class="motto__row motto__row--2">
-              <span class="word" data-word="2"><img src="images/be.svg" alt="" class="w-be"></span>
-              <span class="word" data-word="3"><img src="images/real.svg" alt="" class="w-real"></span>
+              <span class="word" data-mescola data-word="2"><svg class="w-be" aria-hidden="true" focusable="false" width="183" height="136" viewBox="0 0 183 136" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 136L29 0H57.6C66.1333 0 72.8 1.73334 77.6 5.2C82.5333 8.53333 85.8 13.1333 87.4 19C89.1333 24.7333 89.2 31.2667 87.6 38.6C86.5333 44.0667 84.7333 48.6 82.2 52.2C79.8 55.8 77 58.5333 73.8 60.4C70.7333 62.2667 67.6667 63.6 64.6 64.4C67.6667 65.6 70.3333 67.3333 72.6 69.6C74.8667 71.7333 76.6667 74.4 78 77.6C79.4667 80.6667 80.3333 84.2667 80.6 88.4C81 92.4 80.7333 96.9333 79.8 102C79 106.667 77.5333 111.067 75.4 115.2C73.2667 119.333 70.4 123 66.8 126.2C63.3333 129.267 59.0667 131.667 54 133.4C49.0667 135.133 43.3333 136 36.8 136H0ZM31 57.2H46C51.3333 57.2 55.9333 56.4667 59.8 55C63.6667 53.5333 66.8 51.4 69.2 48.6C71.6 45.8 73.2 42.1333 74 37.6C74.6667 33.8667 74.8667 30.5333 74.6 27.6C74.4667 24.5333 73.6667 21.8667 72.2 19.6C70.8667 17.3333 68.7333 15.6 65.8 14.4C63 13.0667 59.2 12.4 54.4 12.4H40.4L31 57.2ZM28.4 69.2L16.8 124H36.8C40.5333 124 43.9333 123.533 47 122.6C50.2 121.533 53.0667 120.067 55.6 118.2C58.2667 116.2 60.4 113.667 62 110.6C63.7333 107.533 65 103.8 65.8 99.4C66.8667 93.5333 66.8 88.3333 65.6 83.8C64.4 79.2667 61.8667 75.7333 58 73.2C54.1333 70.5333 48.8 69.2 42 69.2H28.4Z" fill="white"/><path d="M168.552 57.4L165.752 70.2H120.952L109.752 123.2H162.152L157.152 136H92.752L121.752 0H182.952L180.152 13H132.952L123.752 57.4H168.552Z" fill="white"/></svg></span>
+              <span class="word" data-mescola data-word="3"><svg class="w-real" aria-hidden="true" focusable="false" width="357" height="136" viewBox="0 0 357 136" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M34.6 77.6H24V135.4H0V0H41.4C47.6667 0 53.1333 0.800006 57.8 2.40001C62.6 4 66.6 6.4 69.8 9.60001C73.1333 12.6667 75.6667 16.5333 77.4 21.2C79.1333 25.7333 80 31.0667 80 37.2C80 43.6 79 48.9333 77 53.2C75.1333 57.3333 72.8 60.6 70 63C67.2 65.2667 64.6667 66.8667 62.4 67.8C65.0667 69 67.3333 70.5333 69.2 72.4C71.2 74.2667 72.8 76.5333 74 79.2C75.3333 81.8667 76.2667 85.0667 76.8 88.8C77.4667 92.4 77.8 96.6667 77.8 101.6V107.2C77.8 110.933 77.8 114.2 77.8 117C77.9333 119.8 78.0667 122.267 78.2 124.4C78.4667 126.4 78.6667 128.267 78.8 130C79.0667 131.733 79.4 133.533 79.8 135.4H56.4C55.8667 133.8 55.4 132 55 130C54.7333 128 54.5333 125.733 54.4 123.2C54.2667 120.667 54.1333 118.067 54 115.4C54 112.6 54 109.733 54 106.8V101.8C54 95.8 53.4 91.0667 52.2 87.6C51 84.1334 49 81.6 46.2 80C43.5333 78.4 39.6667 77.6 34.6 77.6ZM24 19.8V58.2H35.4C39.1333 58.2 42.2667 57.8 44.8 57C47.3333 56.0667 49.4 54.8 51 53.2C52.7333 51.6 53.9333 49.6 54.6 47.2C55.4 44.6667 55.8 41.6667 55.8 38.2C55.8 34.2 55.1333 30.8667 53.8 28.2C52.6 25.4 50.6667 23.3333 48 22C45.3333 20.5333 42 19.8 38 19.8H24Z" fill="#FDD200"/><path d="M160.4 54.2V75.2H116.8V114.6H165.6L162.6 135.4H93V0H162.2V21.2H116.8V54.2H160.4Z" fill="#FDD200"/><path d="M241 101.4H209.6L202.8 135.4H178.6L210 0H241.4L273 135.4H247.6L241 101.4ZM214 80.4H236.6C235.4 73.8667 234.2 67.8 233 62.2C231.933 56.6 230.933 51.4 230 46.6C229.067 41.8 228.2 37.4 227.4 33.4C226.6 29.4 225.933 25.8 225.4 22.6H224.8C224.4 25.8 223.8 29.4 223 33.4C222.333 37.4 221.467 41.8667 220.4 46.8C219.467 51.7333 218.467 57 217.4 62.6C216.467 68.2 215.333 74.1333 214 80.4Z" fill="#FDD200"/><path d="M286 135.4V0H310.4V114.8H356.4L354.2 135.4H286Z" fill="#FDD200"/></svg></span>
             </span>
           </h1>
 
@@ -55,21 +63,26 @@
             <canvas id="girasole" aria-hidden="true"></canvas>
           </div>
 
-          <a class="pill pill--about" href="#chi-siamo"><span>Su di noi</span></a>
 
           <div class="loader" id="loader" aria-live="polite">0%</div>
           <div class="scroll-hint" id="hint" aria-hidden="true">Scorri</div>
         </div>
+        <!-- fuori dalla tavola: ancorato al bordo destro dello schermo come la navbar,
+             così il testo finisce esattamente dove finisce "Contattaci" -->
+        <a class="pill pill--about" href="#chi-siamo"><span>Su di noi</span></a>
       </div>
     </section>
 
     <!-- LAVORI IN EVIDENZA (Figma: componente "LAVORI IN EVIDENZA", carosello)
-         - le frecce fanno scorrere i progetti avanti e indietro, in loop;
-         - a ogni passaggio il gap tra le card si allarga e poi torna al suo posto (il "rimbalzo");
+         - su desktop la sezione si ferma in cima e lo scroll verticale fa scorrere
+           i progetti in orizzontale; finito l'ultimo, la pagina riprende a scendere;
+         - le frecce portano al progetto precedente / successivo;
+         - mentre scorre il gap tra le card si allarga e poi torna al suo posto (il "rimbalzo");
          - il nome del progetto si vede solo sulla card di sinistra.
          La versione precedente (cascata con hover) è in lavori-cascata.css / lavori-cascata.js. -->
     <section class="lavori" id="lavori" aria-labelledby="lavori-titolo">
-      <h2 class="lavori__titolo" id="lavori-titolo">Lavori in evidenza</h2>
+     <div class="lavori__sticky" id="lavori-sticky">
+      <h2 class="lavori__titolo" id="lavori-titolo" aria-label="Lavori in evidenza"><!-- al passaggio del mouse diventa "Guarda i nostri lavori" (mescola.js). href: mettere qui la pagina del portfolio quando c'è --><a class="lavori__titolo-testo" href="#" data-mescola-cambia="Guarda i nostri lavori" aria-label="Guarda i nostri lavori">Lavori in evidenza</a></h2>
 
       <div class="carosello-zona">
         <div class="carosello" aria-roledescription="carosello" aria-label="Lavori in evidenza">
@@ -79,28 +92,28 @@
               <img src="images/lavori/carosello-world-cup.jpg" alt="Shuttlecock World Cup, Italian Stage" width="1592" height="968">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome">Italian Open &amp; <br>World Cup 2025</p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Italian Open &amp; <br>World Cup 2025</span></p>
           </a>
           <a class="card" href="#" data-lavoro="infiorata">
             <div class="card__foto">
               <img src="images/lavori/carosello-infiorata.jpg" alt="Infiorata di Noto 2026, il pubblico davanti al pannello" width="1592" height="968" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome">Infiorata di Noto <br>2026</p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Infiorata di Noto <br>2026</span></p>
           </a>
           <a class="card" href="#" data-lavoro="beach-soccer">
             <div class="card__foto">
               <img src="images/lavori/carosello-beach-soccer.jpg" alt="Beach Soccer 2026, premiazione" width="1592" height="968" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome">Beach Soccer 2026</p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Beach Soccer 2026</span></p>
           </a>
           <a class="card" href="#" data-lavoro="magiantosa">
             <div class="card__foto">
               <img src="images/lavori/carosello-magiantosa.jpg" alt="Magiantosa, Lumia amaro al limone in riva al mare" width="1592" height="968" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome">Magiantosa</p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Magiantosa</span></p>
           </a>
           <!-- copie delle prime due card: servono solo al loop, non toccarle a mano -->
           <a class="card" href="#" data-lavoro="world-cup" aria-hidden="true" tabindex="-1" data-copia>
@@ -108,14 +121,14 @@
               <img src="images/lavori/carosello-world-cup.jpg" alt="" width="1592" height="968" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome">Italian Open &amp; <br>World Cup 2025</p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Italian Open &amp; <br>World Cup 2025</span></p>
           </a>
           <a class="card" href="#" data-lavoro="infiorata" aria-hidden="true" tabindex="-1" data-copia>
             <div class="card__foto">
               <img src="images/lavori/carosello-infiorata.jpg" alt="" width="1592" height="968" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome">Infiorata di Noto <br>2026</p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Infiorata di Noto <br>2026</span></p>
           </a>
         </div>
         </div>
@@ -125,11 +138,50 @@
           <button class="freccia" type="button" data-dir="1" aria-label="Progetto successivo"><svg viewBox="0 0 45.168 44.448" preserveAspectRatio="none" fill="none" aria-hidden="true"><path d="M0 19.392H34.752L18.048 3.888L21.792 0L45.168 22.224V22.368L21.792 44.448L18.048 40.32L34.752 25.056H0V19.392Z" fill="currentColor"/></svg></button>
         </div>
       </div>
+     </div>
     </section>
 
-    <!-- Sezione di prova: serve solo a vedere dove finisce la pagina -->
-    <section class="next" id="chi-siamo">
-      <p>Qui inizia la sezione successiva del sito.</p>
+    <!-- CHI SIAMO (Figma: componente "Missione Visione Valori", nodo 233:844)
+         - clic su una parola: si apre il suo testo, le altre si chiudono;
+         - durante l'apertura parola e testo restano centrati nello schermo;
+         - al passaggio del mouse: lettere che si rimescolano + sottolineatura,
+           come i pulsanti della navbar.
+         Testi provvisori (lorem ipsum, come nel design). -->
+    <section class="mvv" id="chi-siamo" aria-label="Chi siamo">
+      <div class="mvv__lista">
+        <div class="mvv__voce">
+          <h3 class="mvv__intestazione">
+            <button class="mvv__titolo" type="button" data-mescola aria-expanded="false" aria-controls="mvv-missione"><span class="mvv__maschera"><span class="mvv__parola" data-mescola-testo>MISSIONE</span></span></button>
+          </h3>
+          <div class="mvv__pannello" id="mvv-missione" role="region" aria-label="Missione">
+            <p class="mvv__testo">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          </div>
+        </div>
+        <div class="mvv__voce">
+          <h3 class="mvv__intestazione">
+            <button class="mvv__titolo" type="button" data-mescola aria-expanded="false" aria-controls="mvv-visione"><span class="mvv__maschera"><span class="mvv__parola" data-mescola-testo>VISIONE</span></span></button>
+          </h3>
+          <div class="mvv__pannello" id="mvv-visione" role="region" aria-label="Visione">
+            <p class="mvv__testo">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          </div>
+        </div>
+        <div class="mvv__voce">
+          <h3 class="mvv__intestazione">
+            <button class="mvv__titolo" type="button" data-mescola aria-expanded="false" aria-controls="mvv-valori"><span class="mvv__maschera"><span class="mvv__parola" data-mescola-testo>VALORI</span></span></button>
+          </h3>
+          <div class="mvv__pannello" id="mvv-valori" role="region" aria-label="Valori">
+            <p class="mvv__testo">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCRITTA FINALE (Figma: "Scritta", nodo 257:3695)
+         Sempre in basso nello schermo, con la stessa distanza dal bordo sinistro
+         della sezione "Lavori in evidenza", usata anche come distanza dal fondo. -->
+    <section class="scritta" aria-label="Hai un progetto? Con noi diventa reale.">
+      <!-- ogni parola sale da sotto la sua "finestra", una dopo l'altra (--i = ordine), come "is gonna be real" -->
+      <p class="scritta__testo"><span class="scritta__parola" style="--i:0"><span>hai</span></span> <span class="scritta__parola" style="--i:1"><span>un</span></span> <span class="scritta__parola" style="--i:2"><span>progetto?</span></span><br><span class="scritta__parola" style="--i:3"><span>con</span></span> <span class="scritta__parola" style="--i:4"><span>noi</span></span> <span class="scritta__parola" style="--i:5"><span>diventa</span></span> <span class="scritta__parola" style="--i:6"><span>REALE.</span></span></p>
     </section>
   </main>
 
@@ -138,5 +190,9 @@
 
   <script src="script.js"></script>
   <script src="lavori.js"></script>
+  <script src="chi-siamo.js"></script>
+  <script src="mescola.js"></script>
+  <script src="scia.js"></script>
+  <script src="scritta.js"></script>
 </body>
 </html>

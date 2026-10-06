@@ -13,25 +13,64 @@
    rimbalzo) sono in cima a lavori.js.
    ========================================================= */
 
+/* La sezione è alta più dello schermo (l'altezza la calcola lavori.js):
+   mentre la attraversi, .lavori__sticky resta fermo e lo scroll
+   verticale fa scorrere le card in orizzontale. Stessa tecnica della hero.
+   NB: niente overflow:hidden su .lavori, altrimenti lo sticky non funziona. */
 .lavori {
-  --s: calc(100vw / 1440);
+  --s: var(--s-lavori);   /* vedi style.css: segue larghezza E altezza dello schermo */
   position: relative;
-  background: var(--bianco);
+  background: transparent;   /* il bianco è il livello della scia (scia.js) */
   color: var(--nero);
-  padding: calc(var(--s) * 50) 0 calc(var(--s) * 99) calc(var(--s) * 100);
+}
+.lavori__sticky {
+  position: sticky;
+  top: 0;                             /* se il contenuto è più alto dello schermo, lavori.js lo porta in negativo */
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--s) * 50) 0 calc(var(--s) * 100) calc(var(--s) * 100);   /* spazi a multipli di 5 (in Figma sotto era 99) */
   overflow: hidden;
 }
 
 /* ---------- TITOLO DELLA SEZIONE ---------- */
-/* Figma: Acumin VF Wide Semibold 48 → qui Archivo largo come ripiego */
+/* titolo di sezione: dimensione e peso comuni, in style.css (--titolo-…) */
 .lavori__titolo {
-  font-size: max(24px, calc(var(--s) * 48));
-  font-weight: 600;
+  font-size: var(--titolo-dimensione);
+  font-weight: var(--titolo-peso);
   font-stretch: 125%;
+  font-variation-settings: "wdth" var(--wide), "wght" var(--titolo-peso);
   line-height: 1.4;
   text-transform: uppercase;
   margin-bottom: calc(var(--s) * 25);
 }
+/* "finestra" del titolo: il testo sale da sotto e compare (lavori.js) */
+.lavori__titolo { overflow: hidden; }
+.lavori__titolo-testo {
+  display: inline-block;
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  will-change: transform;
+}
+/* al passaggio del mouse la scritta diventa "Guarda i nostri lavori" (mescola.js)
+   e si sottolinea, come i pulsanti della navbar */
+.lavori__titolo-testo::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 0.12em;
+  height: max(1px, calc(var(--s) * 2));
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s ease;
+}
+.lavori__titolo-testo:hover::after,
+.lavori__titolo-testo:focus-visible::after { transform: scaleX(1); }
+.lavori__titolo-testo:focus-visible { outline: none; }
 
 /* ---------- FINESTRA E BINARIO ---------- */
 .carosello {
@@ -49,6 +88,7 @@
 /* ---------- CARD ---------- */
 .card {
   flex: none;
+  will-change: transform;            /* livello fisso: niente "scatti" quando il gap si apre e si chiude */
   width: calc(var(--s) * 796);
   color: inherit;
   text-decoration: none;
@@ -83,12 +123,13 @@
   font-size: max(8px, calc(var(--s) * 10));
   font-weight: 300;
   font-stretch: 125%;
+  font-variation-settings: "wdth" var(--wide), "wght" 300;   /* Acumin VF Wide Light */
   line-height: 1.2;
   text-transform: uppercase;
 }
 
 /* nome del progetto: si vede solo sulla card di sinistra (gestito da lavori.js) */
-/* Figma: Acumin VF Wide 48 → Archivo largo */
+/* Figma: Acumin VF Wide 48 */
 .card__nome {
   margin-top: calc(var(--s) * 25);
   width: calc(var(--s) * 615);
@@ -96,11 +137,44 @@
   font-size: max(16px, calc(var(--s) * 48));
   font-weight: 400;
   font-stretch: 125%;
+  font-variation-settings: "wdth" var(--wide), "wght" 400;   /* Acumin VF Wide */
   line-height: 1.2;
   text-transform: uppercase;
   opacity: 0;
 }
 .card.attiva .card__nome { opacity: 1; }
+
+/* FRECCIA DEL TITOLO (come su lusion.co): passando sul NOME del progetto la freccia
+   (Figma: "Vector 1", nodo 253:3636 — asta 28 px, spessore 5, alta 37)
+   entra da sinistra e spinge il nome a destra; togliendo il mouse esce.
+   Misure in em, così segue la dimensione del nome (48 px in Figma). */
+.card__nome {
+  display: flex;
+  align-items: flex-start;
+  width: fit-content;                          /* l'area sensibile è solo la scritta… */
+  max-width: calc(var(--s) * 615);             /* …larga al massimo come in Figma */
+}
+.card__testo-nome { display: block; }
+.card__freccia {
+  flex: none;
+  display: inline-block;
+  width: 0;                          /* chiusa: non occupa spazio */
+  overflow: hidden;
+  transition: width .6s cubic-bezier(.22, 1, .36, 1);
+}
+.card__freccia svg {
+  display: block;
+  width: calc(1em * 31 / 48);
+  height: calc(1em * 37 / 48);
+  margin-top: calc(1em * (1.2 - 37 / 48) / 2);   /* centrata sulla prima riga del nome */
+  transform: translateX(-110%);      /* chiusa: nascosta a sinistra */
+  transition: transform .6s cubic-bezier(.22, 1, .36, 1);
+}
+/* solo col mouse sopra il nome e solo a fila ferma (la classe "scorre" la mette lavori.js) */
+.lavori:not(.scorre) .card__nome:hover .card__freccia,
+.card:focus-visible .card__freccia { width: calc(1em * (31 + 20) / 48); }   /* freccia + 20 px di spazio */
+.lavori:not(.scorre) .card__nome:hover .card__freccia svg,
+.card:focus-visible .card__freccia svg { transform: none; }
 
 /* ---------- FRECCE ---------- */
 /* Figma: gruppo "Frecce" sopra le foto, gialle, 75 × 74.
@@ -111,11 +185,12 @@
 .carosello__frecce {
   position: absolute;
   z-index: 2;
+  /* 15 px dal bordo dello schermo, a sinistra E a destra
+     (la zona parte 100 px dentro, quindi a sinistra -85; a destra arriva al bordo) */
   left: calc(var(--s) * -85);
+  right: calc(var(--s) * 15);
   top: calc(var(--s) * 239);
   transform: translateY(-50%);
-  width: calc(var(--s) * 1409);
-  padding-right: calc(var(--s) * 50);
   display: flex;
   justify-content: space-between;
   pointer-events: none;               /* tra le due frecce si può cliccare la card */
@@ -145,8 +220,11 @@
    Niente frecce: le card si muovono con lo scroll (vedi lavori.js).
    ========================================================= */
 @media (orientation: portrait) {
-  .lavori {
-    --t: calc(100vw / 430);
+  .lavori { --t: calc(100vw / 430); height: auto !important; }
+  .lavori__sticky {
+    position: static;
+    min-height: 0;
+    display: block;
     padding: calc(var(--t) * 40) 0 calc(var(--t) * 60) var(--margine);
   }
   .lavori__titolo { margin-bottom: calc(var(--t) * 20); }
@@ -169,18 +247,20 @@
   }
   .card__tag li { padding: 4px 5px; font-size: 10px; }
 
-  /* Figma: Acumin VF ExtraCondensed Bold 32 → Archivo strettissimo e nero */
+  /* Figma: Acumin VF ExtraCondensed Bold 32 */
   .card__nome {
     opacity: 1;
     margin-top: calc(var(--t) * 10);
     width: calc(var(--t) * 235);
     min-height: 0;
     font-size: calc(var(--t) * 32);
-    font-weight: 800;
+    font-weight: 700;
     font-stretch: 62%;
+    font-variation-settings: "wdth" var(--extra-condensed), "wght" 700;
     line-height: 1;
   }
   .card__nome br { display: none; }   /* sul telefono il titolo va a capo da solo */
+  .card__freccia { display: none; }   /* sul telefono niente hover: niente freccia */
 
   /* ---------- versione ORIZZONTALE: si trascina col dito ---------- */
   .lavori[data-mobile="orizzontale"] .carosello {

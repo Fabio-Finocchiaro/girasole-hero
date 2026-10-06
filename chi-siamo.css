@@ -1,0 +1,102 @@
+/* =========================================================
+   CHI SIAMO — Missione / Visione / Valori
+   Figma: componente "Missione Visione Valori" (nodo 233:844),
+   tavola larga 1440. Stesso sistema di misure di lavori.css:
+   --s è "un pixel di Figma" riscalato sulla larghezza dello schermo.
+
+   Misure dal design:
+   - righe nere, 2 px (in Figma grigie da 1), con 15 px di margine per lato
+     (in Figma 13 e 12: arrotondati, gli spazi del sito sono multipli di 5)
+   - 20 px tra ogni riga e la parola
+   - parola: stile comune dei titoli di sezione (Acumin VF Wide Regular 64,
+     vedi --titolo-… in style.css), centrata, riga alta 86
+   - testo: Acumin VF Wide 32, largo 765, 30 px sotto la parola
+     (in Figma 32: arrotondato, gli spazi del sito sono multipli di 5),
+     40 px di spazio sotto
+   - sezione: 25 px sopra e sotto
+   Font: Acumin VF da Adobe Fonts (vedi --font in style.css).
+   ========================================================= */
+
+.mvv {
+  --s: calc(100vw / 1440);
+  --riga: var(--nero);                 /* in Figma grigie: ora nere */
+  --riga-spessore: 2px;                /* in Figma 1 px: raddoppiato */
+  background: transparent;   /* il bianco è il livello della scia (scia.js) */
+  color: var(--nero);
+  padding: calc(var(--s) * 25) calc(var(--s) * 15);
+  font-stretch: 125%;
+  font-weight: 400;
+  font-variation-settings: "wdth" var(--wide), "wght" 400;   /* Acumin VF Wide */
+}
+
+.mvv__lista { border-bottom: var(--riga-spessore) solid var(--riga); }
+
+.mvv__voce { border-top: var(--riga-spessore) solid var(--riga); }
+
+/* ---------- PAROLA (pulsante) ---------- */
+.mvv__intestazione { font: inherit; }
+.mvv__titolo {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: calc(var(--s) * 20) 0;     /* 20 tra riga e parola, sopra e sotto */
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  /* titolo di sezione: dimensione e peso comuni, in style.css (--titolo-…) */
+  font-size: var(--titolo-dimensione);
+  font-weight: var(--titolo-peso);
+  font-variation-settings: "wdth" var(--wide), "wght" var(--titolo-peso);
+  line-height: calc(86 / 64);
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+/* sottolineatura al passaggio del mouse: identica ai pulsanti della navbar (.pill) */
+/* "finestra" della parola: la parola sale da sotto e compare mentre entra
+   nello schermo, come il titolo "Lavori in evidenza" (chi-siamo.js) */
+.mvv__maschera { display: block; overflow: hidden; }
+.mvv__parola { display: inline-block; will-change: transform; }
+
+.mvv__parola { position: relative; }
+.mvv__parola::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 0.08em;
+  height: max(1px, calc(var(--s) * 2));
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s ease;
+}
+.mvv__titolo:hover .mvv__parola::after,
+.mvv__titolo:focus-visible .mvv__parola::after,
+.mvv__titolo[aria-expanded="true"] .mvv__parola::after { transform: scaleX(1); }
+.mvv__titolo:focus-visible { outline: none; }
+
+/* ---------- TESTO CHE SI APRE ---------- */
+/* l'altezza la anima chi-siamo.js; da chiuso è 0 e non si vede */
+.mvv__pannello {
+  height: 0;
+  overflow: hidden;
+}
+.mvv__pannello[data-aperto] { height: auto; }
+.mvv__testo {
+  width: min(calc(var(--s) * 765), 100%);
+  margin: 0 auto;
+  /* 30 tra parola e testo: 20 sono già sotto la parola, quindi 10 in più;
+     sotto: 40 di spazio + 20 prima della riga = 60 */
+  padding: calc(var(--s) * 10) 0 calc(var(--s) * 60);
+  font-size: max(16px, calc(var(--s) * 32));
+  line-height: 1.2;
+  text-align: left;
+}
+
+/* ---------- TELEFONO ---------- */
+@media (orientation: portrait) {
+  .mvv { padding: 24px var(--margine); }
+  .mvv__titolo { padding: 16px 0; }
+  .mvv__testo { padding: 8px 0 40px; }
+}

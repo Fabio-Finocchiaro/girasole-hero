@@ -16,15 +16,54 @@
   /* unità della scritta (sul telefono viene ricalcolata) */
   --m: var(--u);
 
-  /* ⇩ LUNGHEZZA DELL'ANIMAZIONE: quanto scroll serve per il giro completo */
-  --durata-scroll: 300vh;
+  /* ⇩ FONT: Acumin VF (Adobe Fonts, kit "WUP sito - Acumin VF") è un font
+     variabile: larghezza e peso si impostano sui suoi assi "wdth" e "wght".
+     Larghezze di Acumin: 100 = normale, 115 = Wide, 50 = ExtraCondensed.
+     Se in futuro serve ritoccare la larghezza, si cambia solo qui. */
+  --font: "acumin-variable", "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --wide: 115;
+  --extra-condensed: 50;
+
+  /* ⇩ TITOLI DI SEZIONE ("Lavori in evidenza", "Missione", "Visione", "Valori"…):
+     tutti uguali, si cambiano solo qui */
+  --titolo-dimensione: max(28px, calc(var(--s-lavori) * 64));   /* 64 px di Figma */
+
+  /* ⇩ UNITÀ DELLA SEZIONE LAVORI: un pixel di Figma, riscalato sulla larghezza
+     MA anche sull'altezza dello schermo, così quando parte lo scroll orizzontale
+     titolo + foto + nome (805 px di Figma) entrano sempre interi.
+     Il 805 va tenuto uguale a ALTEZZA_LAVORI in lavori.js. */
+  --s-lavori: min(100vw / 1440, 100vh / 805);
+  --titolo-peso: 400;                                         /* Acumin VF Wide Regular */
+
+  /* ⇩ LUNGHEZZA DELLA HERO: quanto scroll serve per fare l'animazione A MANO (tornando su).
+     Era 300vh; ora 255vh perché l'ultimo 15% era un tratto in cui non succedeva nulla.
+     In discesa dall'inizio l'animazione parte da sola (durata in script.js). */
+  --durata-scroll: 255vh;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body { background: var(--nero); color: var(--bianco); }
+html { background: var(--nero); }
+body { color: var(--bianco); }   /* body senza sfondo: sotto c'è il livello della scia (scia.js) */
+
+/* ---------- SCIA CHE SEGUE IL MOUSE (scia.js) ----------
+   Livello fisso DIETRO tutti i contenuti: è lui il "bianco" delle sezioni
+   chiare (che quindi non hanno sfondo proprio), con sopra la scia.
+   Le parti nere (hero) hanno il loro sfondo e la coprono. */
+.scia {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  /* sfondo delle parti chiare: sfumatura da destra (#FAFAFA) a sinistra (#FFFFFF) */
+  background: linear-gradient(to left, #FAFAFA, #FFFFFF);
+}
 body {
-  font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font);
+  font-synthesis: none;   /* niente grassetti "finti": il peso lo dà l'asse wght del font */
+  font-variation-settings: "wdth" var(--wide), "wght" 400;   /* di base: Acumin VF Wide */
   -webkit-font-smoothing: antialiased;
 }
 
@@ -39,7 +78,9 @@ body {
   align-items: center;
   justify-content: space-between;
   mix-blend-mode: difference;          /* come in Figma */
+  pointer-events: none;                /* lo spazio vuoto della barra non blocca il mouse sulle sezioni sotto… */
 }
+.nav a { pointer-events: auto; }       /* …i pulsanti invece sì */
 .nav__logo img { display: block; width: 82px; height: 30px; }
 .nav__links { display: flex; gap: max(16px, calc(var(--u) * 93)); }
 
@@ -71,6 +112,7 @@ body {
   font-size: 12px;
   font-weight: 600;
   font-stretch: 125%;
+  font-variation-settings: "wdth" var(--wide), "wght" 600;   /* Acumin VF Wide Semibold */
   text-transform: uppercase;
   color: var(--bianco);
   text-decoration: none;
@@ -116,6 +158,7 @@ html.cursore-attivo .cursore { opacity: 1; }
 /* ---------- HERO ---------- */
 .hero {
   position: relative;
+  background: var(--nero);
   height: calc(100dvh + var(--durata-scroll));
 }
 .hero__sticky {
@@ -150,7 +193,7 @@ html.cursore-attivo .cursore { opacity: 1; }
 
 /* ogni parola ha una "finestra": sale dal basso e compare */
 .word { display: block; overflow: hidden; padding-block: 2px; }
-.word img {
+.word img, .word svg {
   display: block;
   height: auto;
   transform: translateY(calc(var(--in, 0) * -110% + 110%));
@@ -173,14 +216,16 @@ html.cursore-attivo .cursore { opacity: 1; }
 }
 .flower canvas { display: block; width: 100%; height: 100%; }
 
+/* "Su di noi": allineato a destra con "Contattaci" (stesso margine della navbar
+   + i 16 px di spazio interno dei pulsanti); in altezza dove stava nella tavola Figma
+   (693 px dall'alto su 825: la tavola è appoggiata al fondo dello schermo) */
 .pill--about {
   position: absolute;
   z-index: 3;
-  left: calc(var(--u) * 1325);
-  top: calc(var(--u) * 693);
+  right: calc(max(20px, calc(var(--u) * 50)) + 16px);
+  top: calc(100% - var(--u) * (825 - 693));
   min-width: 0;
   padding: 4px 0;
-  width: 65px;
 }
 
 /* caricamento e invito a scorrere */
@@ -193,6 +238,7 @@ html.cursore-attivo .cursore { opacity: 1; }
   font-size: 11px;
   font-weight: 600;
   font-stretch: 125%;
+  font-variation-settings: "wdth" var(--wide), "wght" 600;
   letter-spacing: .1em;
   text-transform: uppercase;
   color: rgba(255,255,255,.6);
@@ -210,13 +256,61 @@ html.cursore-attivo .cursore { opacity: 1; }
 }
 @keyframes hint { 0%{transform:scaleY(0)} 50%{transform:scaleY(1)} 100%{transform:scaleY(0);transform-origin:bottom} }
 
-/* ---------- SEZIONE SUCCESSIVA (solo prova) ---------- */
+/* ---------- SCRITTA FINALE (Figma: "Scritta", nodo 257:3695) ----------
+   Acumin VF Wide 128, interlinea 1.11, larga al massimo 1137 px di Figma.
+   La sezione è alta quanto lo schermo e la scritta sta in basso a sinistra:
+   a sinistra E sotto la stessa distanza del padding sinistro di "Lavori in evidenza"
+   (100 px di Figma, stessa unità --s-lavori; sul telefono il margine di 16 px). */
+.scritta {
+  --spazio: calc(var(--s-lavori) * 100);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 var(--spazio) var(--spazio);
+  background: transparent;   /* il bianco è il livello della scia (scia.js) */
+  color: var(--nero);
+}
+.scritta__testo {
+  max-width: calc(var(--s-lavori) * 1137);
+  font-size: max(36px, calc(var(--s-lavori) * 128));
+  font-weight: 400;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" var(--wide), "wght" 400;   /* Acumin VF Wide */
+  line-height: 1.11;
+}
+/* parola per parola: ogni parola sale da sotto la sua "finestra" (come "is gonna be real").
+   La classe "visibile" la mette scritta.js quando la sezione è arrivata nello schermo. */
+.scritta__parola {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.14em;              /* spazio per le gambe di g e p, che la finestra non deve tagliare */
+  margin-bottom: -0.14em;
+}
+.scritta__parola > span {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform .9s cubic-bezier(.22, 1, .36, 1), opacity .9s cubic-bezier(.22, 1, .36, 1);
+  transition-delay: calc(var(--i) * 110ms);
+}
+.scritta.visibile .scritta__parola > span { transform: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .scritta__parola > span { transform: none; opacity: 1; transition: none; }
+}
+@media (orientation: portrait) {
+  .scritta { --spazio: var(--margine); }
+}
+
+/* ---------- SEZIONE SUCCESSIVA (solo prova, non più usata) ---------- */
 .next {
   min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: 40px 20px;
-  background: var(--bianco);
+  background: transparent;   /* il bianco è il livello della scia */
   color: var(--nero);
   font-size: 14px;
 }
@@ -241,7 +335,7 @@ html.cursore-attivo .cursore { opacity: 1; }
     transform: translateX(-50%);
   }
   .motto { left: 20px; top: 88px; bottom: auto; }
-  .pill--about { left: auto; right: 12px; top: auto; bottom: 20px; }
+  .pill--about { right: var(--margine); top: auto; bottom: 20px; }   /* come "Contattaci": a filo del margine */
   .nav__links { gap: 4px; }
   .nav .pill { min-width: 0; padding: 4px 8px; font-size: 10px; }
   .nav .pill:last-child { padding-right: 0; }   /* il testo finisce esattamente sul margine */
@@ -249,6 +343,6 @@ html.cursore-attivo .cursore { opacity: 1; }
 
 /* ---------- Chi preferisce meno animazioni ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .word img { --in: 1; transform: none; }
+  .word img, .word svg { --in: 1; transform: none; }
   .scroll-hint::after { animation: none; }
 }
