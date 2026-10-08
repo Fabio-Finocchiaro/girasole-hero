@@ -57,7 +57,14 @@ body { color: var(--bianco); }   /* body senza sfondo: sotto c'è il livello del
   height: 100%;
   z-index: -1;
   pointer-events: none;
-  /* sfondo delle parti chiare: sfumatura da destra (#FAFAFA) a sinistra (#FFFFFF) */
+}
+/* sfondo delle parti chiare: sfumatura da destra (#FAFAFA) a sinistra (#FFFFFF).
+   Sta sotto la scia e sotto il giallo del footer (footer.css) */
+.sfondo-chiaro {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
   background: linear-gradient(to left, #FAFAFA, #FFFFFF);
 }
 body {
@@ -134,6 +141,91 @@ body {
 .pill:hover span::after,
 .pill:focus-visible span::after { transform: scaleX(1); }
 .pill:focus-visible { outline: none; }
+
+/* ---------- MENU DEL TELEFONO (menu.js) ----------
+   Pulsante con due linee al posto di HOME / PORTFOLIO / CONTATTACI;
+   il menu si apre a tutto schermo, nero, con le tre voci centrate
+   che salgono una dopo l'altra (come le altre scritte del sito). */
+.nav__menu {
+  display: none;                       /* su desktop non serve */
+  pointer-events: auto;
+  width: 44px;                         /* area da toccare comoda */
+  height: 44px;
+  margin-right: -10px;                 /* le linee finiscono sul margine, come "Contattaci" */
+  padding: 10px;
+  border: 0;
+  background: none;
+  color: var(--bianco);                /* la navbar è in "differenza": diventa nera sulle parti chiare */
+  cursor: pointer;
+}
+.nav__menu svg,
+.menu-mobile__chiudi svg { display: block; width: 24px; height: 24px; }
+
+.menu-mobile {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: var(--nero);
+  color: var(--bianco);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .35s ease, visibility 0s linear .35s;
+}
+html.menu-aperto .menu-mobile {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .35s ease;
+}
+html.menu-aperto { overflow: hidden; }          /* la pagina sotto non scorre */
+html.menu-aperto .logo-fisso { z-index: 60; }   /* il logo resta visibile sopra il menu */
+
+.menu-mobile__chiudi {
+  position: absolute;
+  top: calc((max(64px, calc(var(--u) * 100)) - 44px) / 2);   /* stessa altezza del pulsante del menu */
+  right: calc(var(--margine, 20px) - 10px);
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.menu-mobile__voci {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.menu-mobile__voce {
+  display: block;
+  overflow: hidden;                    /* "finestra" da cui sale la parola */
+  color: inherit;
+  text-decoration: none;
+  font-size: min(40px, 10vw);
+  font-weight: 400;
+  font-variation-settings: "wdth" var(--wide), "wght" 400;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.menu-mobile__voce span {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform .6s cubic-bezier(.22, 1, .36, 1);
+}
+html.menu-aperto .menu-mobile__voce span {
+  transform: none;
+  transition-delay: calc(.1s + var(--i) * .08s);
+}
+.menu-mobile__voce:focus-visible,
+.menu-mobile__chiudi:focus-visible,
+.nav__menu:focus-visible { outline: 2px solid var(--giallo); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .menu-mobile, .menu-mobile__voce span { transition: none !important; }
+  .menu-mobile__voce span { transform: none; }
+}
 
 /* ---------- PUNTATORE PERSONALIZZATO ---------- */
 /* solo con mouse o trackpad (non sul telefono) */
@@ -301,7 +393,14 @@ html.cursore-attivo .cursore { opacity: 1; }
   .scritta__parola > span { transform: none; opacity: 1; transition: none; }
 }
 @media (orientation: portrait) {
-  .scritta { --spazio: var(--margine); }
+  /* sul telefono la sezione è alta quanto la frase (non quanto lo schermo):
+     prima c'era un grande vuoto sopra il testo */
+  .scritta {
+    --spazio: var(--margine);
+    min-height: 0;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
 }
 
 /* ---------- SEZIONE SUCCESSIVA (solo prova, non più usata) ---------- */
@@ -336,9 +435,8 @@ html.cursore-attivo .cursore { opacity: 1; }
   }
   .motto { left: 20px; top: 88px; bottom: auto; }
   .pill--about { right: var(--margine); top: auto; bottom: 20px; }   /* come "Contattaci": a filo del margine */
-  .nav__links { gap: 4px; }
-  .nav .pill { min-width: 0; padding: 4px 8px; font-size: 10px; }
-  .nav .pill:last-child { padding-right: 0; }   /* il testo finisce esattamente sul margine */
+  .nav__links { display: none; }               /* sul telefono le voci stanno nel menu */
+  .nav__menu { display: block; }
 }
 
 /* ---------- Chi preferisce meno animazioni ---------- */

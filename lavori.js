@@ -9,7 +9,11 @@
    copie in coda servono a chiudere il giro). Finito il tratto,
    la pagina riprende a scendere normalmente; scrollando in su
    si rifà il percorso al contrario.
-   Funziona con rotellina, trackpad, barra di scorrimento e tastiera.
+   Funziona con rotellina, trackpad, barra di scorrimento e tastiera,
+   e anche con lo scroll ORIZZONTALE (due dita di lato sul trackpad,
+   rotellina orizzontale, Shift + rotellina): mentre la sezione è
+   ferma, il gesto orizzontale fa scorrere le card esattamente come
+   quello verticale (impostazione in CAROSELLO.desktop.orizzontale).
    - quando smetti di scrollare, la fila si aggancia al progetto più vicino;
    - mentre scorre veloce il gap tra le card si allarga (da 20 a 45 px)
      e quando si ferma torna al suo posto con un piccolo rimbalzo;
@@ -50,6 +54,7 @@ const CAROSELLO = {
     rigidezza: 170,       // molla del gap: più alto = torna più in fretta
     smorzamento: 13,      // molla del gap: più basso = rimbalza di più
     dissolvenzaNome: 2.5, // quanto in fretta sparisce il nome quando la card si sposta
+    orizzontale: 1,       // scroll orizzontale nel tratto bloccato: 1 = stessa velocità del verticale, 0 = disattivato
   },
 
   // ⇩ DESKTOP: comparsa delle card mentre la sezione sale (prima dello scroll orizzontale).
@@ -163,6 +168,28 @@ const CAROSELLO = {
   // la direzione la dice la rotellina stessa (più affidabile dello scroll)
   window.addEventListener("wheel", (e) => { if (Math.abs(e.deltaY) > 0) direzione = Math.sign(e.deltaY); }, { passive: true });
   window.addEventListener("keydown", (e) => { if (!["ArrowLeft", "ArrowRight"].includes(e.key)) interrompi(); });
+
+  // SCROLL ORIZZONTALE: mentre la sezione è ferma (tratto bloccato), un gesto
+  // orizzontale diventa lo stesso scroll della pagina che farebbe quello verticale.
+  // Destra = progetto successivo, sinistra = precedente. Il preventDefault blocca
+  // anche il "torna indietro" del browser col trackpad, ma solo qui dentro.
+  window.addEventListener("wheel", (e) => {
+    if (telefono.matches || !D.orizzontale) return;
+    // Shift + rotellina: alcuni browser lo lasciano come deltaY
+    let dx = e.deltaX;
+    if (!dx && e.shiftKey) dx = e.deltaY;
+    if (Math.abs(dx) <= Math.abs(e.shiftKey ? 0 : e.deltaY)) return;   // gesto soprattutto verticale: ci pensa il browser
+    // tacche in righe o pagine (rotellina) → pixel
+    if (e.deltaMode === 1) dx *= 16;
+    else if (e.deltaMode === 2) dx *= window.innerWidth;
+    const fatto = cima - sezione.getBoundingClientRect().top;          // px già percorsi nel tratto bloccato
+    if (fatto < -1 || fatto > corsa + 1) return;                       // sezione non ferma: niente
+    if ((fatto <= 0 && dx < 0) || (fatto >= corsa && dx > 0)) return;  // già al primo / all'ultimo: lascio stare
+    e.preventDefault();
+    interrompi();
+    direzione = Math.sign(dx);
+    window.scrollBy({ top: dx * D.orizzontale, behavior: "instant" });
+  }, { passive: false });
 
   function vai(dir) {
     const qui = Math.round(progresso() * N);

@@ -1,0 +1,224 @@
+/* =========================================================
+   FOOTER (Figma: componente "Footer", nodo 264:823)
+   - fondo giallo, testo nero;
+   - in alto tre gruppi di link (Menu, Social, Servizi): etichetta
+     con linea nera sotto; "Menu" è largo il doppio, link su due colonne;
+   - in basso indirizzo, telefono ed email in grande (Acumin VF
+     Regular 110), a destra il ©.
+   Misure in pixel di Figma: --f è un pixel della tavola da 1440,
+   la stessa unità della scritta finale (--s-lavori).
+   Dentro l'indirizzo tutto è in "em" del testo grande (1em = 110 px
+   di Figma), così sul telefono basta cambiare la grandezza del testo.
+   ========================================================= */
+
+.footer {
+  --f: var(--s-lavori);
+  --link: max(16px, calc(var(--f) * 25));     /* Footer/Link: Acumin VF Regular 25 */
+  --gap: max(15px, calc(var(--f) * 25));
+
+  /* larghezze di Acumin VF usate nel footer (asse "wdth").
+     Se una larghezza non torna con Figma, si ritocca solo qui. */
+  --acumin-normale: 100;
+  --acumin-semicondensed: 87.5;
+
+  /* alto almeno quanto lo schermo: in fondo alla pagina il giallo copre
+     tutta la viewport, dal bordo in alto (0) a quello in basso */
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;               /* link in alto, indirizzo in basso */
+  gap: calc(var(--f) * 100);
+  /* sopra: altezza della navbar (la stessa formula di .nav in style.css) + almeno 50 px di spazio */
+  padding: calc(max(64px, calc(var(--u) * 100)) + max(50px, calc(var(--f) * 50))) max(20px, calc(var(--f) * 50)) max(20px, calc(var(--f) * 25));
+  background: var(--giallo);
+  color: var(--nero);
+  font-variation-settings: "wdth" var(--acumin-normale), "wght" 400;   /* Acumin VF Regular */
+}
+
+/* ---------- GIALLO IN PARALLASSE (footer.js) ----------
+   Il giallo è un livello fisso dietro i contenuti, sopra il bianco e
+   sotto la scia; footer.js lo fa salire più lento dei testi.
+   Senza JavaScript il footer resta giallo come prima. */
+.footer-giallo {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100lvh;
+  z-index: -2;
+  pointer-events: none;
+  background: var(--giallo);
+  transform: translate3d(0, 100lvh, 0);
+  will-change: transform;
+}
+html.footer-parallasse .footer { background: transparent; }
+
+/* sopra il giallo il puntatore a stella diventa bianco */
+.cursore img { transition: filter .25s ease; }
+html.sul-giallo .cursore img { filter: brightness(0) invert(1); }
+
+/* ---------- COLONNE DI LINK ---------- */
+.footer__colonne {
+  display: grid;
+  grid-template-columns: 660fr 315fr 315fr;    /* come in Figma */
+  column-gap: var(--gap);
+  row-gap: 40px;
+}
+.footer__etichetta {
+  padding-bottom: max(5px, calc(var(--f) * 10));
+  border-bottom: 2px solid currentColor;
+  font-size: var(--link);
+  font-weight: 400;
+  line-height: 1.2;
+}
+.footer__liste {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  column-gap: var(--gap);
+}
+.footer__lista {
+  list-style: none;
+  padding-top: max(5px, calc(var(--f) * 10));
+  font-size: var(--link);
+  line-height: 1.2;
+}
+.footer a { color: inherit; text-decoration: none; }
+.footer a:focus-visible { outline: none; }
+
+/* hover dei link: sottolineatura che si allunga, come i pulsanti della navbar
+   (le lettere che si rimescolano le fa mescola.js grazie a data-mescola) */
+.footer__lista a span { position: relative; }
+.footer__lista a span::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s ease;
+}
+.footer__lista a:hover span::after,
+.footer__lista a:focus-visible span::after { transform: scaleX(1); }
+
+/* ---------- INDIRIZZO GRANDE ---------- */
+.footer__fondo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 0;                                       /* come in Figma: lo spazio lo fa space-between */
+}
+.footer__indirizzo {
+  font-style: normal;                           /* <address> di base è in corsivo */
+  font-size: max(40px, calc(var(--f) * 110));
+  line-height: 1.05;
+}
+/* ogni riga: elementi allineati in basso, 10 px di Figma tra l'uno e l'altro
+   (come l'auto layout della riga in Figma) */
+.footer__riga,
+.footer__gruppo-link {
+  display: flex;
+  align-items: flex-end;
+  column-gap: calc(1em * 10 / 110);
+  white-space: nowrap;                          /* su desktop ogni riga resta intera, come in Figma */
+}
+
+/* "Misterbianco" + ", Italia": su desktop sono due pezzi della riga (10 px tra loro, come in Figma),
+   sul telefono diventano una frase sola, così la virgola non finisce a inizio riga */
+.f-insieme { display: contents; }
+
+/* "95045" in Acumin ExtraCondensed, "wup.it" in SemiCondensed Bold */
+.f-extra { font-variation-settings: "wdth" var(--extra-condensed), "wght" 400; }
+.f-dominio { font-variation-settings: "wdth" var(--acumin-semicondensed), "wght" 700; }
+
+/* hover su telefono ed email: sottolineato il testo */
+.footer__gruppo-link:hover .f-parola,
+.footer__gruppo-link:focus-visible .f-parola {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: .08em;
+}
+
+/* "slot": contenitore di un simbolo, alzato dal fondo della riga
+   di quanto indicato in Figma (padding bottom della cornice) */
+.f-slot { display: block; }
+.f-slot svg { display: block; }
+
+/* freccia ↖ + "wup" sottolineato (Figma: "Freccia + sigla") */
+.f-slot--sigla { padding-bottom: calc(1em * 49 / 110); }
+.f-sigla-gruppo {
+  display: flex;
+  align-items: flex-start;
+  gap: calc(1em * 5 / 110);
+}
+.f-sigla-gruppo svg { width: calc(1em * 28 / 110); height: calc(1em * 28 / 110); }
+.f-sigla {
+  padding-bottom: 2px;
+  border-bottom: 2px solid currentColor;
+  font-size: calc(1em * 33 / 110);
+  line-height: 1.2;
+}
+
+/* telefono nel riquadro: prefisso | numero su due righe (Figma: "Numero") */
+.f-slot--telefono { padding-bottom: calc(1em * 18 / 110); }
+.f-telefono {
+  display: flex;
+  align-items: center;
+  height: calc(1em * 75 / 110);
+  border: 3px solid currentColor;
+}
+.f-mini {                                        /* Footer/Mini: Acumin VF SemiCondensed Semibold 24 */
+  font-size: calc(1em * 24 / 110);
+  font-variation-settings: "wdth" var(--acumin-semicondensed), "wght" 600;
+  line-height: 1.1;
+}
+.f-telefono__prefisso { padding: 0 calc(1em * 15 / 24); }
+.f-telefono__cifre {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 calc(1em * 15 / 24);
+  border-left: 3px solid currentColor;
+}
+.f-telefono__cifre > span + span {
+  margin-top: 0;
+  padding-top: 2px;
+  border-top: 2px solid currentColor;
+}
+
+/* asterisco disegnato tra "info" e "wup.it" (Figma: "Anello (@)") */
+.f-slot--asterisco { padding-bottom: calc(1em * 10 / 110); }
+.f-slot--asterisco svg { width: calc(1em * 54 / 110); height: calc(1em * 72 / 110); }
+
+/* © in basso a destra */
+.footer__copy {
+  flex: none;
+  font-size: var(--link);
+  line-height: 1.2;
+}
+
+/* ---------- TELEFONO (schermo verticale) ---------- */
+@media (orientation: portrait) {
+  .footer {
+    --link: 18px;
+    --gap: 15px;
+    gap: 60px;
+    padding-left: var(--margine);
+    padding-right: var(--margine);
+    padding-bottom: 20px;
+  }
+  .footer__colonne { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer__gruppo--menu { grid-column: 1 / -1; }
+  .footer__fondo { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .footer__riga { flex-wrap: wrap; white-space: normal; }   /* sul telefono le righe vanno a capo */
+  .f-insieme { display: block; }
+  /* riquadro del telefono più grande, altrimenti i numeri scendono sotto i 10 px */
+  .f-telefono { height: calc(1em * 100 / 110); }
+  .f-telefono .f-mini { font-size: calc(1em * 32 / 110); }
+  .f-slot--telefono { padding-bottom: calc(1em * 12 / 110); }
+  .footer__indirizzo { font-size: calc((100vw - 2 * var(--margine)) * .13); }
+}

@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="lavori.css">
   <link rel="stylesheet" href="chi-siamo.css">
+  <link rel="stylesheet" href="footer.css">
 </head>
 <body>
 
@@ -33,7 +34,25 @@
       <a class="pill" href="#"><span>Portfolio</span></a>
       <a class="pill" href="#"><span>Contattaci</span></a>
     </nav>
+    <!-- solo sul telefono: apre il menu a tutto schermo (menu.js) -->
+    <button class="nav__menu" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu-mobile">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 8H22M2 16H22" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
   </header>
+
+  <!-- MENU DEL TELEFONO (menu.js, stili in style.css)
+       a tutto schermo, sfondo nero, le tre voci centrate; si chiude con la X,
+       toccando una voce o col tasto Esc -->
+  <div class="menu-mobile" id="menu-mobile" role="dialog" aria-modal="true" aria-label="Menu" inert>
+    <button class="menu-mobile__chiudi" type="button" aria-label="Chiudi il menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4L20 20M20 4L4 20" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+    <nav class="menu-mobile__voci" aria-label="Menu principale">
+      <a class="menu-mobile__voce" href="#" style="--i:0"><span>Home</span></a>
+      <a class="menu-mobile__voce" href="#lavori" style="--i:1"><span>Portfolio</span></a>
+      <a class="menu-mobile__voce" href="#contatti" style="--i:2"><span>Contattaci</span></a>
+    </nav>
+  </div>
 
   <main>
     <!-- HERO: questa sezione è alta più dello schermo.
@@ -80,7 +99,7 @@
          - mentre scorre il gap tra le card si allarga e poi torna al suo posto (il "rimbalzo");
          - il nome del progetto si vede solo sulla card di sinistra.
          La versione precedente (cascata con hover) è in lavori-cascata.css / lavori-cascata.js. -->
-    <section class="lavori" id="lavori" aria-labelledby="lavori-titolo">
+    <section class="lavori" id="lavori" aria-labelledby="lavori-titolo" data-mobile="verticale">
      <div class="lavori__sticky" id="lavori-sticky">
       <h2 class="lavori__titolo" id="lavori-titolo" aria-label="Lavori in evidenza"><!-- al passaggio del mouse diventa "Guarda i nostri lavori" (mescola.js). href: mettere qui la pagina del portfolio quando c'è --><a class="lavori__titolo-testo" href="#" data-mescola-cambia="Guarda i nostri lavori" aria-label="Guarda i nostri lavori">Lavori in evidenza</a></h2>
 
@@ -185,7 +204,86 @@
     </section>
   </main>
 
+  <!-- FOOTER (Figma: componente "Footer", nodo 264:823 — stili in footer.css)
+       - in alto tre gruppi di link con la linea sotto l'etichetta;
+       - in basso indirizzo / telefono / email in grande. -->
+  <footer class="footer" id="contatti">
+    <div class="footer__colonne">
+      <nav class="footer__gruppo footer__gruppo--menu" aria-labelledby="footer-menu">
+        <h2 class="footer__etichetta" id="footer-menu">Menu</h2>
+        <div class="footer__liste">
+          <ul class="footer__lista">
+            <li><a href="#" data-mescola><span>Home</span></a></li>
+            <li><a href="#lavori" data-mescola><span>Portfolio</span></a></li>
+            <li><a href="#chi-siamo" data-mescola><span>Chi siamo</span></a></li>
+            <li><a href="#" data-mescola><span>Contattaci</span></a></li>
+          </ul>
+          <ul class="footer__lista">
+            <li><a href="#" data-mescola><span>Privacy policy</span></a></li>
+            <li><a href="#" data-mescola><span>Cookie policy</span></a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="footer__gruppo">
+        <h2 class="footer__etichetta">Social</h2>
+        <!-- href: mettere qui i link ai profili -->
+        <ul class="footer__lista">
+          <li><a href="#" data-mescola><span>Instagram</span></a></li>
+          <li><a href="#" data-mescola><span>Facebook</span></a></li>
+          <li><a href="#" data-mescola><span>LinkedIn</span></a></li>
+          <li><a href="#" data-mescola><span>TikTok</span></a></li>
+        </ul>
+      </div>
+
+      <div class="footer__gruppo">
+        <h2 class="footer__etichetta">Servizi</h2>
+        <ul class="footer__lista">
+          <li><a href="#" data-mescola><span>Foto</span></a></li>
+          <li><a href="#" data-mescola><span>Video</span></a></li>
+          <li><a href="#" data-mescola><span>Grafica</span></a></li>
+          <li><a href="#" data-mescola><span>Social media</span></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__fondo">
+      <address class="footer__indirizzo">
+        <!-- riga 1: **90 · Via Rosina Anselmi · freccia + "wup" -->
+        <span class="footer__riga">
+          <span><span aria-hidden="true">**</span>90</span>
+          <span>Via Rosina Anselmi</span>
+          <span class="f-slot f-slot--sigla" aria-hidden="true"><span class="f-sigla-gruppo"><svg viewBox="0 0 28 28" fill="none"><path d="M4.2 4.2L23.8 23.8M18.2 4.2H4.2V18.2" stroke="currentColor" stroke-width="3" stroke-linecap="square"/></svg><span class="f-sigla">wup</span></span></span>
+        </span>
+        <!-- riga 2: Misterbianco · , Italia · *95045 -->
+        <span class="footer__riga">
+          <span class="f-insieme"><span>Misterbianco</span><span>, Italia</span></span>
+          <span><span aria-hidden="true">*</span><span class="f-extra">95045</span></span>
+        </span>
+        <!-- riga 3: Telefono + riquadro · info * wup.it -->
+        <span class="footer__riga">
+          <a class="footer__gruppo-link" href="tel:+393926000407" aria-label="Telefono +39 392 600 0407">
+            <span class="f-parola">Telefono</span>
+            <span class="f-slot f-slot--telefono" aria-hidden="true"><span class="f-telefono"><span class="f-mini f-telefono__prefisso">+39</span><span class="f-mini f-telefono__cifre"><span>392</span><span>600 0407</span></span></span></span>
+          </a>
+          <a class="footer__gruppo-link" href="mailto:info@wup.it" aria-label="info@wup.it">
+            <span class="f-parola">info</span>
+            <span class="f-slot f-slot--asterisco" aria-hidden="true"><svg viewBox="0 0 54 72"><path d="M23.4 16H31.32L29.89 32.28L42.54 22.16L46.83 29.31L31.32 36.35L46.72 43.5L42.54 50.65L29.78 40.42L31.43 56.92H23.29L24.83 40.42L12.29 50.65L8.11 43.5L23.51 36.35L8 29.31L12.29 22.16L24.72 32.28L23.4 16Z" fill="currentColor"/></svg></span>
+            <span class="f-parola f-dominio">wup.it</span>
+          </a>
+        </span>
+      </address>
+      <p class="footer__copy">©2026</p>
+    </div>
+  </footer>
+
   <!-- puntatore personalizzato -->
+  <!-- livelli di sfondo fissi, dietro tutti i contenuti (dal più in fondo):
+       il bianco delle sezioni chiare, il giallo del footer in parallasse (footer.js),
+       e sopra i due la scia del mouse (la crea scia.js) -->
+  <div class="sfondo-chiaro" aria-hidden="true"></div>
+  <div class="footer-giallo" id="footer-giallo" aria-hidden="true"></div>
+
   <div class="cursore" id="cursore" aria-hidden="true"><img src="images/puntatore.svg" alt=""></div>
 
   <script src="script.js"></script>
@@ -194,5 +292,7 @@
   <script src="mescola.js"></script>
   <script src="scia.js"></script>
   <script src="scritta.js"></script>
+  <script src="footer.js"></script>
+  <script src="menu.js"></script>
 </body>
 </html>

@@ -276,10 +276,16 @@
   .lavori[data-mobile="orizzontale"] .card { scroll-snap-align: start; }
 
   /* ---------- versione VERTICALE: una sotto l'altra, segue lo scroll della pagina ---------- */
+  .lavori[data-mobile="verticale"] .lavori__sticky { padding-right: var(--margine); }
   .lavori[data-mobile="verticale"] .carosello { overflow: visible; }
   .lavori[data-mobile="verticale"] .carosello__binario {
     flex-direction: column;
     width: auto;
     row-gap: calc(var(--t) * 40);
   }
+  /* card larghe quanto lo schermo (meno i margini), foto con le proporzioni di Figma (290 × 400) */
+  .lavori[data-mobile="verticale"] .card { width: 100%; }
+  .lavori[data-mobile="verticale"] .card__foto { height: auto; aspect-ratio: 290 / 400; }
+  .lavori[data-mobile="verticale"] .card__tag { top: auto; bottom: calc(var(--t) * 20); }
+  .lavori[data-mobile="verticale"] .card__nome { width: 100%; max-width: none; }   /* il nome usa tutta la larghezza */
 }

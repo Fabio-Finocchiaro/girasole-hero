@@ -17,6 +17,7 @@
      scroll orizzontale) non sale, e nei lavori si sposta di lato con le card;
    - quando il mouse si ferma la scia si ritira dalla coda verso la
      testa e sparisce del tutto;
+   - sopra il giallo del footer diventa bianca (il bordo del giallo lo dà footer.js);
    - solo con il mouse (niente su telefono e tablet), e niente se il
      sistema chiede animazioni ridotte.
    ========================================================= */
@@ -29,6 +30,7 @@ const SCIA = {
   inseguimento: 0.1,   // quanto in fretta la scia raggiunge il mouse (1 = attaccata al puntatore, più basso = lo insegue da lontano)
   coloreTesta: [0xfd, 0xd2, 0x00],   // #FDD200
   coloreCoda: [0xfd, 0x87, 0x00],    // #FD8700
+  coloreSulGiallo: "#FFFFFF",        // colore della scia sopra il giallo del footer
 };
 
 (() => {
@@ -158,6 +160,7 @@ const SCIA = {
 
     // RETTANGOLO che segue la scia: fasce tra un punto e l'altro, dal giallo all'arancione;
     // le estremità restano tagliate dritte (perpendicolari alla scia)
+    const gialloTop = (window.WUP && window.WUP.gialloTop) ?? Infinity;
     const normali = P.map((p, i) => {
       const a = P[Math.max(0, i - 1)], b = P[Math.min(P.length - 1, i + 1)];
       const dx = b.x - a.x, dyy = b.y - a.y; const l = Math.hypot(dx, dyy) || 1;
@@ -166,7 +169,9 @@ const SCIA = {
     for (let i = 0; i < P.length - 1; i++) {
       const a = P[i], na = normali[i], b = P[i + 1], nb = normali[i + 1];
       const tColore = Math.min(1, ((L[i] + L[i + 1]) / 2) / lunghezzaMax);
-      ctx.fillStyle = ctx.strokeStyle = mescolaColore(tColore);
+      // sopra il giallo del footer la scia è bianca (window.WUP.gialloTop lo scrive footer.js)
+      const sulGiallo = (a.y + b.y) / 2 >= gialloTop;
+      ctx.fillStyle = ctx.strokeStyle = sulGiallo ? SCIA.coloreSulGiallo : mescolaColore(tColore);
       ctx.beginPath();
       ctx.moveTo(a.x + na.x * a.m, a.y + na.y * a.m);
       ctx.lineTo(b.x + nb.x * b.m, b.y + nb.y * b.m);
