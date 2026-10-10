@@ -1,6 +1,6 @@
 /* =========================================================
-   ANIMAZIONI DELLA PROPOSTA [A…] — file provvisorio
-   Gli stili sono in proposta.css (blocchi [A…]).
+   ANIMAZIONI [A…]
+   Gli stili sono nei CSS, nei blocchi [A…] (style.css, lavori.css, chi-siamo.css, footer.css).
    Qui si decide solo QUANDO partono: ogni elemento riceve la classe
    "in-vista" quando entra nello schermo (e la perde quando esce del
    tutto, così l'animazione si ripete come la scritta finale).

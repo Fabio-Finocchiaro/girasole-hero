@@ -23,6 +23,7 @@
   --font: "acumin-variable", "Archivo", "Helvetica Neue", Arial, sans-serif;
   --wide: 115;
   --extra-condensed: 50;
+  --condensed: 75;   /* Acumin Condensed: numero del caricamento e email del footer */
 
   /* ⇩ TITOLI DI SEZIONE ("Lavori in evidenza", "Missione", "Visione", "Valori"…):
      tutti uguali, si cambiano solo qui */
@@ -179,7 +180,15 @@ html.menu-aperto .menu-mobile {
   transition: opacity .35s ease;
 }
 html.menu-aperto { overflow: hidden; }          /* la pagina sotto non scorre */
-html.menu-aperto .logo-fisso { z-index: 60; }   /* il logo resta visibile sopra il menu */
+/* logo dentro il menu: stessa posizione del logo nella navbar */
+.menu-mobile__logo {
+  position: absolute;
+  top: calc((max(64px, calc(var(--u) * 100)) - 30px) / 2);
+  left: var(--margine, 20px);
+  display: block;
+}
+.menu-mobile__logo img { display: block; width: 82px; height: 30px; }
+.menu-mobile__logo:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 
 .menu-mobile__chiudi {
   position: absolute;
@@ -320,33 +329,79 @@ html.cursore-attivo .cursore { opacity: 1; }
   padding: 4px 0;
 }
 
-/* caricamento e invito a scorrere */
-.loader, .scroll-hint {
+/* ---------- CARICAMENTO (Figma: componente "CARICAMENTO") ----------
+   Schermo nero con il numero (da 1 a 100) e l'asterisco al centro dello schermo:
+   Acumin Condensed Semibold 110, bianco. Finito il caricamento si dissolve e
+   compare il sito (hero.js). Durante il conteggio la pagina non scorre. */
+.caricamento {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;                 /* sopra navbar e menu, sotto la stella del puntatore (9999) */
+  display: grid;
+  place-items: center;
+  background: var(--nero);
+  color: var(--bianco);
+  transition: opacity .7s ease;
+}
+.caricamento.finito { opacity: 0; pointer-events: none; }
+.caricamento__numero {
+  font-size: max(56px, calc(var(--u) * 110));
+  line-height: 1;
+  font-variation-settings: "wdth" var(--condensed), "wght" 600;   /* Acumin VF Condensed Semibold */
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;           /* tutte le cifre larghe uguali */
+}
+/* L'asterisco non si muove: è lui il punto fisso al centro dello schermo e il numero
+   è appeso alla sua sinistra (position absolute), quindi cambiando cifre si allunga
+   solo verso sinistra. Lo spostamento di 0,55 em rimette al centro il "100*" finale. */
+.caricamento__ancora {
+  position: relative;
+  display: inline-block;
+  transform: translateX(.55em);
+}
+.caricamento__cifre {
+  position: absolute;
+  right: 100%;
+  top: 0;
+}
+html.caricamento-attivo, html.caricamento-attivo body { overflow: hidden; }
+
+/* ---------- "SCORRI ↓" ----------
+   Stile del componente Figma "Scorri" (Acumin Condensed Semibold + la freccia del sito girata in giù),
+   ma piccolo e centrato in basso, a 25 px dal fondo, come il vecchio "Scorri".
+   Compare un secondo dopo la fine del caricamento (ritardoScorri in hero.js). */
+.scroll-hint {
   position: absolute;
   z-index: 4;
   left: 50%;
-  bottom: 24px;
+  bottom: 25px;
   transform: translateX(-50%);
-  font-size: 11px;
-  font-weight: 600;
-  font-stretch: 125%;
-  font-variation-settings: "wdth" var(--wide), "wght" 600;
-  letter-spacing: .1em;
+  display: flex;
+  align-items: center;
+  column-gap: calc(1em * 27 / 110);
+  font-size: clamp(18px, calc(var(--u) * 26), 28px);
+  line-height: 1;
+  font-variation-settings: "wdth" var(--condensed), "wght" 600;
+  letter-spacing: .02em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.6);
-  transition: opacity .4s;
+  color: var(--bianco);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .8s ease;
 }
-.scroll-hint { opacity: 0; }
-.scroll-hint::after {
-  content: "";
+.scroll-hint__freccia {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: calc(1em * 74 / 110);
+  height: calc(1em * 75 / 110);
+}
+.scroll-hint__freccia svg {
   display: block;
-  width: 1px; height: 28px;
-  margin: 8px auto 0;
-  background: currentColor;
-  animation: hint 1.6s ease-in-out infinite;
-  transform-origin: top;
+  width: calc(1em * 75 / 110);
+  height: calc(1em * 74 / 110);
+  transform: rotate(-90deg);          /* la freccia ← del carosello, girata verso il basso */
 }
-@keyframes hint { 0%{transform:scaleY(0)} 50%{transform:scaleY(1)} 100%{transform:scaleY(0);transform-origin:bottom} }
 
 /* ---------- SCRITTA FINALE (Figma: "Scritta", nodo 257:3695) ----------
    Acumin VF Wide 128, interlinea 1.11, larga al massimo 1137 px di Figma.
@@ -424,7 +479,7 @@ html.cursore-attivo .cursore { opacity: 1; }
     --m: calc((100vw - 40px) / 655);
   }
   .nav { padding: 0 var(--margine); }
-  .logo-fisso { padding-left: var(--margine); }
+  html .logo-fisso { display: none; }                /* sul telefono il logo sta dentro il menu ad hamburger */
   .stage { width: 100vw; height: 100dvh; }
   .flower {
     left: 50%;
@@ -442,5 +497,229 @@ html.cursore-attivo .cursore { opacity: 1; }
 /* ---------- Chi preferisce meno animazioni ---------- */
 @media (prefers-reduced-motion: reduce) {
   .word img, .word svg { --in: 1; transform: none; }
-  .scroll-hint::after { animation: none; }
 }
+
+/* =========================================================
+   MIGLIORIE APPROVATE (prima in proposta.css)
+   Telefono e accessibilità [P…], dettagli [D…], stile brutalista [B…],
+   animazioni [A…]: le sigle restano per ritrovare ogni blocco.
+   Le animazioni partono da animazioni.js (classe "animazioni-attive" su <html>).
+   ========================================================= */
+:root { --entra: cubic-bezier(.22, 1, .36, 1); }   /* curva di tutte le entrate */
+
+/* ---------- [P2] TELEFONO: niente lampo grigio al tocco ----------
+   iOS e Android colorano di grigio/blu ogni elemento toccato:
+   è il segnale più evidente di "sito web" invece di "app".
+   Il feedback al tocco lo danno già le sottolineature e le animazioni. */
+html { -webkit-tap-highlight-color: transparent; }
+
+/* ---------- [P3] TELEFONO: tocco immediato ----------
+   Senza questa regola alcuni browser aspettano ~300 ms dopo il tocco
+   per capire se è un doppio tocco (zoom). Qui il doppio tocco non serve. */
+a, button { touch-action: manipulation; }
+
+/* ---------- [P5] TELEFONO: tenendo premuto non si seleziona il testo dei pulsanti ----------
+   Solo sui comandi (pulsanti, voci di menu), NON sui testi: quelli devono
+   restare copiabili (indirizzo, telefono, email). */
+.pill, .nav__menu, .menu-mobile__voce, .menu-mobile__chiudi,
+.mvv__titolo, .freccia {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* ---------- [P6] TELEFONO: sottolineature che restavano "attaccate" ----------
+   Sul telefono non esiste il passaggio del mouse: il browser lo simula al
+   primo tocco e lo lascia acceso finché non tocchi altrove. Risultato: la
+   sottolineatura di un link toccato restava visibile. Qui la spengo quando
+   lo schermo non ha un vero mouse; con la tastiera (Tab) continua a comparire. */
+@media not all and (hover: hover) and (pointer: fine) {
+  .pill:hover:not(:focus-visible) span::after,
+  .lavori__titolo-testo:hover:not(:focus-visible)::after,
+  .footer__lista a:hover:not(:focus-visible) span::after,
+  .mvv__titolo:hover:not(:focus-visible):not([aria-expanded="true"]) .mvv__parola::after {
+    transform: scaleX(0);
+  }
+  .footer__gruppo-link:hover:not(:focus-visible) .f-parola { text-decoration: none; }
+}
+
+/* ---------- [P10] titolo visibile solo ai lettori di schermo ----------
+   (usato per "Chi siamo", che a schermo ha già MISSIONE / VISIONE / VALORI) */
+.solo-lettori {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- [D1] LOGO LEGGIBILE OVUNQUE ----------
+   I due loghi sono uno sopra l'altro; quello con WUP nero compare
+   in dissolvenza (200 ms, come un cambio di colore) quando la barra
+   passa sopra le parti chiare. Il girasole è identico nei due file,
+   quindi si vede cambiare solo la scritta. */
+.logo-fisso { display: grid; align-content: center; }
+.logo-fisso img { grid-area: 1 / 1; }
+.logo-fisso__scuro { opacity: 0; transition: opacity .2s ease; }
+html.logo-scuro .logo-fisso__scuro { opacity: 1; }
+
+/* ---------- [D2] MENU NERO SUL GIALLO (non più blu) ---------- */
+html.nav-sul-giallo .nav { mix-blend-mode: normal; }
+html.nav-sul-giallo .nav .pill,
+html.nav-sul-giallo .nav__menu { color: var(--nero); }
+
+@media (orientation: portrait) {
+  :root { --margine: 15px; }               /* era 16 */
+}
+
+/* ---------- [D6] NIENTE ANGOLI ARROTONDATI ----------
+   I pulsanti del menu avevano un border-radius di 15 px (invisibile perché
+   senza sfondo, ma contro la regola del sito: se un giorno avranno uno
+   sfondo, nasceranno già con gli angoli dritti). */
+.pill { border-radius: 0; }
+
+/* ---------- [D7] SELEZIONE DEL TESTO NEI COLORI DEL SITO ----------
+   Selezionando un testo compare il giallo WUP invece del blu del sistema;
+   sul footer giallo, al contrario, nero con testo giallo. */
+::selection { background: var(--giallo); color: var(--nero); }
+.footer ::selection { background: var(--nero); color: var(--giallo); }
+
+/* ---------- [B1] PULSANTI DEL MENU IN RIQUADRO ----------
+   Erano "pillole" senza bordo: diventano riquadri a spigolo vivo con
+   bordo da 1 px, come il riquadro del telefono nel footer.
+   La barra resta in "differenza": bianchi sul nero, neri sul bianco.
+   Spazio interno da 4/16 a 5/15 (multipli di 5). */
+.pill {
+  padding: 5px 15px;
+  border: 1px solid currentColor;
+}
+/* "Su di noi" nella hero: resta com'era, solo testo a filo con la sottolineatura
+   (niente riquadro, niente riempimento al passaggio del mouse) */
+.pill--about {
+  border: 0;
+  min-width: 0;
+  padding: 4px 0;
+}
+/* col mouse sopra: il riquadro si riempie, il testo si inverte
+   (la sottolineatura resta, è il segno del sito) */
+.pill { transition: background-color .2s ease, color .2s ease; }
+@media (hover: hover) and (pointer: fine) {
+  .pill:not(.pill--about):hover { background: var(--bianco); color: var(--nero); }
+  html.nav-sul-giallo .nav .pill:hover { background: var(--nero); color: var(--giallo); }
+}
+
+/* ---------- [B2] MENU DEL TELEFONO A ELENCO ----------
+   Le tre voci non sono più centrate: stanno a sinistra, una per riga,
+   divise da righe bianche da 2 px e numerate (01, 02, 03), come un indice. */
+.menu-mobile { place-items: center stretch; padding: 0 var(--margine, 20px); }
+.menu-mobile__voci {
+  align-items: stretch;
+  gap: 0;
+  border-top: 2px solid var(--bianco);
+  counter-reset: voce;
+}
+.menu-mobile__voce {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 2px solid var(--bianco);
+  counter-increment: voce;
+}
+.menu-mobile__voce::before {
+  content: "0" counter(voce);
+  flex: none;
+  width: 30px;
+  font-size: 12px;
+  font-variation-settings: "wdth" var(--wide), "wght" 600;
+  color: var(--giallo);
+}
+
+/* ---------- [A1] MENU: IL RIQUADRO SI RIEMPIE DA SINISTRA ----------
+   Al posto della dissolvenza: il colore entra da sinistra come una
+   sottolineatura che diventa piena (200 ms entrata). */
+.pill { position: relative; isolation: isolate; }
+.pill--about { position: absolute; }   /* "Su di noi" resta ancorato nella hero */
+.pill--about::before { content: none; }  /* "Su di noi" non si riempie */
+.pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--bianco);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s var(--entra);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pill:hover { background: none; }
+  .pill:hover::before { transform: scaleX(1); }
+  html.nav-sul-giallo .nav .pill:hover { background: none; color: var(--giallo); }
+  html.nav-sul-giallo .nav .pill::before { background: var(--nero); }
+}
+
+/* ---------- [B5] "REALE." IN UN BLOCCO GIALLO ----------
+   L'ultima parola della scritta finale sta su un blocco giallo pieno,
+   come "IS" e "REAL" nella hero: la frase chiude con il colore del brand
+   e con un gesto netto. Il blocco sale insieme alla parola. */
+.scritta__parola:last-child > span {
+  background: var(--giallo);
+  padding: 0 .1em;
+  margin-left: -.1em;     /* la R resta allineata alle altre righe, il giallo sborda a sinistra */
+}
+
+/* ---------- [A4] "REALE.": IL GIALLO ENTRA DA SINISTRA ----------
+   Prima sale la parola (come le altre), poi il blocco giallo
+   le passa sotto da sinistra a destra, come un evidenziatore. */
+html.animazioni-attive .scritta__parola:last-child > span { background: none; position: relative; z-index: 0; }
+html.animazioni-attive .scritta__parola:last-child > span::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--giallo);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .7s var(--entra);
+}
+html.animazioni-attive .scritta.visibile .scritta__parola:last-child > span::before {
+  transform: none;
+  transition-delay: calc(6 * 110ms + .45s);
+}
+
+/* ---------- [A7] STRISCIA "WORK UNDER PRESSURE" ----------
+   Fascia gialla tra la hero e i lavori: WORK UNDER PRESSURE (il nome
+   esteso di WUP) in nero, ripetuto,
+   separato dall'asterisco del footer. Scorre da sola, accelera con lo
+   scroll e cambia verso se torni su. È l'unico elemento nuovo: se non
+   convince si toglie il blocco <div class="striscia"> nell'HTML. */
+.striscia {
+  position: relative;
+  overflow: hidden;
+  background: var(--giallo);
+  color: var(--nero);
+  border-block: 3px solid var(--nero);
+  padding: max(10px, calc(var(--s-lavori) * 15)) 0;
+}
+.striscia__binario { display: flex; width: max-content; will-change: transform; }
+.striscia__pezzo {
+  flex: none;
+  white-space: pre;
+  font-size: var(--titolo-dimensione);
+  font-variation-settings: "wdth" var(--wide), "wght" var(--titolo-peso);
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.striscia__pezzo i { font-style: normal; }
+
+/* ---------- riduci movimento: tutto fermo e visibile ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .pill::before, .card__foto img, .cursore img { transition: none !important; }
+}
+
+/* "Su di noi" nella hero: nascosto (per farlo tornare basta togliere questa regola) */
+.pill--about { display: none; }

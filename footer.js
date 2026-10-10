@@ -58,3 +58,26 @@ const FOOTER = {
   document.addEventListener("mouseleave", () => { mouseY = null; html.classList.remove("sul-giallo"); });
   aggiorna();
 })();
+
+/* ---------- RIGA DEI CONTATTI A FILO DI "95045" ----------
+   In Figma motto e P.IVA finiscono esattamente dove finisce "*95045".
+   Nel browser Acumin non ha le stesse larghezze di Figma, quindi una misura fissa
+   non basta: qui misuro dove finisce davvero la riga "Misterbianco, Italia *95045"
+   e do quella larghezza alla riga dei contatti (variabile --larghezza-contatti, vedi footer.css). */
+(() => {
+  const indirizzo = document.querySelector(".footer__indirizzo");
+  const contatti = document.querySelector(".footer__riga--contatti");
+  if (!indirizzo || !contatti) return;
+  const rigaCitta = indirizzo.querySelectorAll(".footer__riga")[1];
+  if (!rigaCitta || !rigaCitta.lastElementChild) return;
+
+  function misura() {
+    const fine = rigaCitta.lastElementChild.getBoundingClientRect().right;
+    const inizio = rigaCitta.getBoundingClientRect().left;
+    contatti.style.setProperty("--larghezza-contatti", `${(fine - inizio).toFixed(1)}px`);
+  }
+  misura();
+  if (document.fonts) document.fonts.ready.then(misura);   // rimisura quando Acumin è arrivato
+  new ResizeObserver(misura).observe(rigaCitta.lastElementChild);
+  window.addEventListener("resize", misura);
+})();

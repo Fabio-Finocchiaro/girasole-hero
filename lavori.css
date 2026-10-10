@@ -164,15 +164,15 @@
 }
 .card__freccia svg {
   display: block;
-  width: calc(1em * 31 / 48);
-  height: calc(1em * 37 / 48);
-  margin-top: calc(1em * (1.2 - 37 / 48) / 2);   /* centrata sulla prima riga del nome */
+  width: calc(1em * 35 / 48);                      /* la freccia di tutto il sito (45,168 × 44,448) */
+  height: calc(1em * 34.4 / 48);
+  margin-top: calc(1em * (1.2 - 34.4 / 48) / 2);   /* centrata sulla prima riga del nome */
   transform: translateX(-110%);      /* chiusa: nascosta a sinistra */
   transition: transform .6s cubic-bezier(.22, 1, .36, 1);
 }
 /* solo col mouse sopra il nome e solo a fila ferma (la classe "scorre" la mette lavori.js) */
 .lavori:not(.scorre) .card__nome:hover .card__freccia,
-.card:focus-visible .card__freccia { width: calc(1em * (31 + 20) / 48); }   /* freccia + 20 px di spazio */
+.card:focus-visible .card__freccia { width: calc(1em * (35 + 20) / 48); }   /* freccia + 20 px di spazio */
 .lavori:not(.scorre) .card__nome:hover .card__freccia svg,
 .card:focus-visible .card__freccia svg { transform: none; }
 
@@ -288,4 +288,55 @@
   .lavori[data-mobile="verticale"] .card__foto { height: auto; aspect-ratio: 290 / 400; }
   .lavori[data-mobile="verticale"] .card__tag { top: auto; bottom: calc(var(--t) * 20); }
   .lavori[data-mobile="verticale"] .card__nome { width: 100%; max-width: none; }   /* il nome usa tutta la larghezza */
+}
+
+/* =========================================================
+   MIGLIORIE APPROVATE — LAVORI (prima in proposta.css)
+   ========================================================= */
+/* ---------- [P9] FRECCE DEL CAROSELLO: risposta quando le premi ----------
+   Ora crescono col mouse sopra (+10%) ma premendole non succede niente.
+   Premendo si "schiacciano" un poco, subito (100 ms): il sito risponde al dito.
+   Valori nella fascia consigliata da Emil Kowalski (0.95–0.98). */
+.freccia:active { transform: scale(0.97); transition-duration: .1s; }
+@media (hover: hover) {
+  .freccia:hover:active { transform: scale(1.05); }   /* dal +10% dell'hover scende al +5% */
+}
+
+/* ---------- [D3] "LAVORI IN EVIDENZA" NON FINISCE PIÙ SOTTO LA BARRA ----------
+   Lo spazio sopra il titolo passa da 50 a 100 (l'altezza della barra) e quello
+   sotto le card da 100 a 50: la sezione resta alta uguale (805 px di Figma,
+   quindi lavori.js non cambia), ma il titolo parte sotto il menu invece di
+   toccarlo. Solo su desktop. */
+@media (orientation: landscape) {
+  .lavori__sticky {
+    padding-top: calc(var(--s) * 100);
+    padding-bottom: calc(var(--s) * 50);
+  }
+}
+
+/* ---------- [B3] LAVORI: FOTO IN CORNICE ----------
+   Ogni foto ha una cornice nera da 3 px (disegnata DENTRO la foto:
+   le misure di Figma e i calcoli di lavori.js non cambiano).
+   Le etichette gialle e il titolo "Lavori in evidenza" restano come
+   nella prima versione (niente striscia numerata, niente riga sotto). */
+.card__foto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--nero);
+  pointer-events: none;
+}
+
+/* ---------- [A3] FOTO DEI LAVORI: SI SCOPRONO DAL BASSO ----------
+   Ogni foto si apre come una tendina che sale (la stessa direzione delle
+   parole), con l'immagine che dentro "si assesta" da più grande.
+   Su desktop si aprono man mano che entrano nel carosello. */
+html.animazioni-attive .card .card__foto { clip-path: inset(100% 0 0 0); transition: clip-path 1s var(--entra); }
+html.animazioni-attive .card.in-vista .card__foto { clip-path: inset(0); }
+html.animazioni-attive .card .card__tag { transform: translateY(-15px); opacity: 0; transition: transform .7s var(--entra) .45s, opacity .7s var(--entra) .45s; }
+html.animazioni-attive .card.in-vista .card__tag { transform: none; opacity: 1; }
+/* col mouse sopra: la foto si avvicina dentro la cornice */
+@media (hover: hover) and (pointer: fine) {
+  .card__foto img { transition: transform .8s var(--entra); }
+  .lavori:not(.scorre) .card:hover .card__foto img { transform: scale(1.05); }
 }

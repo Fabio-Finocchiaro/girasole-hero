@@ -122,8 +122,6 @@ html.nav-sul-giallo .nav__menu { color: var(--nero); }
   .mvv__titolo { padding: 15px 0; }         /* era 16 */
   .mvv__testo { padding: 10px 0 40px; }     /* era 8 */
 }
-.loader, .scroll-hint { bottom: 25px; }                /* era 24 */
-.scroll-hint::after { height: 30px; margin-top: 10px; } /* era 28 e 8 */
 
 /* ---------- [D6] NIENTE ANGOLI ARROTONDATI ----------
    I pulsanti del menu avevano un border-radius di 15 px (invisibile perché
@@ -271,9 +269,9 @@ html.nav-sul-giallo .nav__menu { color: var(--nero); }
 
 /* ---------- [B6] FOOTER: ASTERISCO SULLE ETICHETTE, RIGA SOPRA L'INDIRIZZO ----------
    L'asterisco è già il segno del footer (**90, *95045): ora apre anche
-   le etichette Menu / Social / Servizi. Sopra l'indirizzo grande una riga
+   le etichette Menu / Social / Servizi (ora è il disegno vettoriale del Figma,
+   <svg class="f-asterisco"> in index.html, non più un carattere). Sopra l'indirizzo grande una riga
    da 3 px (lo spessore del riquadro del telefono) chiude la griglia. */
-.footer__etichetta::before { content: "* "; }
 .footer__fondo {
   padding-top: max(15px, calc(var(--f) * 25));
   border-top: 3px solid currentColor;
@@ -454,3 +452,6 @@ html.cursore-premuto .cursore img { transform: scale(.7) rotate(45deg); transiti
 @media (prefers-reduced-motion: reduce) {
   .pill::before, .card__foto img, .cursore img { transition: none !important; }
 }
+
+/* "Su di noi" nella hero: nascosto (per farlo tornare basta togliere questa regola) */
+.pill--about { display: none; }

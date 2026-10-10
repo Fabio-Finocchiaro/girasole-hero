@@ -66,12 +66,16 @@ html.sul-giallo .cursore img { filter: brightness(0) invert(1); }
   row-gap: 40px;
 }
 .footer__etichetta {
+  display: flex;
+  align-items: center;
+  column-gap: max(3px, calc(var(--f) * 5));   /* asterisco + parola: 5 px di Figma */
   padding-bottom: max(5px, calc(var(--f) * 10));
   border-bottom: 2px solid currentColor;
   font-size: var(--link);
   font-weight: 400;
   line-height: 1.2;
 }
+.f-asterisco { flex: none; display: block; width: max(10px, calc(var(--f) * 16)); height: auto; }   /* asterisco 16 × 17 */
 .footer__liste {
   display: grid;
   grid-auto-flow: column;
@@ -147,14 +151,27 @@ html.sul-giallo .cursore img { filter: brightness(0) invert(1); }
 .f-slot { display: block; }
 .f-slot svg { display: block; }
 
-/* freccia ↖ + "wup" sottolineato (Figma: "Freccia + sigla") */
+/* freccia ↖ + "wup" sottolineato (Figma: "Freccia + sigla").
+   La freccia è quella di tutto il sito (la ← del carosello) girata di 45°, in un quadrato di 28 px */
 .f-slot--sigla { padding-bottom: calc(1em * 49 / 110); }
 .f-sigla-gruppo {
   display: flex;
   align-items: flex-start;
   gap: calc(1em * 5 / 110);
 }
-.f-sigla-gruppo svg { width: calc(1em * 28 / 110); height: calc(1em * 28 / 110); }
+.f-freccia {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: calc(1em * 28 / 110);
+  height: calc(1em * 28 / 110);
+}
+.f-freccia svg {
+  display: block;
+  width: calc(1em * 19.93 / 110);
+  height: calc(1em * 19.66 / 110);
+  transform: rotate(45deg);
+}
 .f-sigla {
   padding-bottom: 2px;
   border-bottom: 2px solid currentColor;
@@ -179,20 +196,95 @@ html.sul-giallo .cursore img { filter: brightness(0) invert(1); }
 .f-telefono__cifre {
   align-self: stretch;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 calc(1em * 15 / 24);
+  align-items: center;
+  padding: 0 calc(1em * 6 / 24) 0 calc(1em * 7 / 24);
   border-left: 3px solid currentColor;
-}
-.f-telefono__cifre > span + span {
-  margin-top: 0;
-  padding-top: 2px;
-  border-top: 2px solid currentColor;
+  white-space: nowrap;
 }
 
-/* asterisco disegnato tra "info" e "wup.it" (Figma: "Anello (@)") */
-.f-slot--asterisco { padding-bottom: calc(1em * 10 / 110); }
-.f-slot--asterisco svg { width: calc(1em * 54 / 110); height: calc(1em * 72 / 110); }
+/* ---------- RIGA 3: CONTATTI (Figma: "Riga 3 – contatti", 1150 × 218) ----------
+   a sinistra blocco nero con due asterischi gialli e il telefono nel riquadro;
+   al centro l'email su due righe (Acumin Condensed Semibold 110);
+   a destra il motto nel riquadro e, in basso, nome e P.IVA (rettangolo nero, testo giallo). */
+.footer__riga--contatti {
+  align-items: stretch;
+  column-gap: calc(1em * 35 / 110);
+  /* motto e P.IVA finiscono a filo di "95045": la larghezza vera la misura footer.js; 1150 di Figma se manca */
+  width: var(--larghezza-contatti, calc(1em * 1150 / 110));
+  height: calc(1em * 218 / 110);
+  position: relative;
+  container-type: inline-size;                  /* serve all'email per adattarsi allo spazio libero */
+}
+.f-sinistra {
+  flex: none;
+  width: calc(1em * 204 / 110);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: calc(1em * 14 / 110);
+}
+.f-blocco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: calc(1em * 18 / 110);
+  height: calc(1em * 101 / 110);
+  background: var(--nero);
+  color: var(--giallo);
+}
+.f-blocco__ast { display: block; width: calc(1em * 54 / 110); height: calc(1em * 57 / 110); }
+.f-sinistra .footer__gruppo-link { align-items: flex-end; }
+.f-sinistra .f-slot--telefono { padding-bottom: 0; }
+.f-email {
+  display: block;
+  align-self: flex-start;
+  /* Si adatta allo spazio fra blocco nero e motto: riga meno blocco nero, motto e 14 px di stacco (≈4,17 em),
+     diviso per la larghezza reale della scritta in Acumin (≈6,95 em per em di corpo, con un po' di margine). Max 93 %: non tocca mai il motto. */
+  font-size: min(calc(1em * 0.93), calc((100cqw - max(40px, calc(var(--f) * 110)) * 4.17) / 6.95));
+  font-variation-settings: "wdth" var(--condensed), "wght" 600;   /* Acumin VF Condensed Semibold */
+  line-height: calc(109 / (110 * 0.93));
+  margin-right: calc(1em * 14 / (110 * 0.93));   /* almeno 14 px di Figma dal riquadro del motto: niente sovrapposizioni */
+}
+.f-lato {                                       /* colonna del motto (205), fissa a filo destro della riga come in Figma;
+                                                   la firma è più larga (364) e sborda a sinistra, sotto l'email */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: calc(1em * 205 / 110);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.f-motto {                                      /* riquadro 205 × 101, bordo 3, 3 righe centrate (misure in em del suo testo: 29 px di Figma) */
+  margin-top: calc(1em * 8 / 29);
+  width: calc(1em * 205 / 29);
+  height: calc(1em * 101 / 29);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid currentColor;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: calc(1em * 29 / 110);
+  line-height: 1;
+  font-variation-settings: "wdth" var(--acumin-semicondensed), "wght" 700;   /* Acumin VF SemiCondensed Bold */
+}
+.f-firma {                                      /* 364 di larghezza, testo a destra (misure in em del suo testo: 40 px di Figma) */
+  width: calc(1em * 364 / 40);
+  font-size: calc(1em * 40 / 110);
+  line-height: 1.05;
+  text-align: right;
+  font-variation-settings: "wdth" var(--acumin-semicondensed), "wght" 700;
+}
+.f-nome { display: block; padding-right: .225em; }
+.f-piva {
+  display: block;
+  padding: .175em .225em .175em .5em;
+  background: var(--nero);
+  color: var(--giallo);
+}
 
 /* © in basso a destra */
 .footer__copy {
@@ -201,24 +293,109 @@ html.sul-giallo .cursore img { filter: brightness(0) invert(1); }
   line-height: 1.2;
 }
 
-/* ---------- TELEFONO (schermo verticale) ---------- */
+/* ---------- TELEFONO (schermo verticale) ----------
+   Footer compatto: indirizzo a una riga per volta, telefono e blocco nero affiancati,
+   email su due righe, poi motto e nome/P.IVA sulla stessa riga. */
 @media (orientation: portrait) {
   .footer {
     --link: 18px;
     --gap: 15px;
-    gap: 60px;
+    --larghezza: calc(100vw - 2 * var(--margine));
+    gap: 40px;
     padding-left: var(--margine);
     padding-right: var(--margine);
     padding-bottom: 20px;
   }
-  .footer__colonne { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer__colonne { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 30px; }
   .footer__gruppo--menu { grid-column: 1 / -1; }
-  .footer__fondo { flex-direction: column; align-items: flex-start; gap: 20px; }
-  .footer__riga { flex-wrap: wrap; white-space: normal; }   /* sul telefono le righe vanno a capo */
-  .f-insieme { display: block; }
-  /* riquadro del telefono più grande, altrimenti i numeri scendono sotto i 10 px */
-  .f-telefono { height: calc(1em * 100 / 110); }
-  .f-telefono .f-mini { font-size: calc(1em * 32 / 110); }
-  .f-slot--telefono { padding-bottom: calc(1em * 12 / 110); }
-  .footer__indirizzo { font-size: calc((100vw - 2 * var(--margine)) * .13); }
+  .footer__fondo { flex-direction: column; align-items: flex-start; gap: 15px; padding-top: 15px; }
+  .footer__indirizzo { font-size: calc(var(--larghezza) * .072); }   /* "**90 Via Rosina Anselmi" sta in una riga */
+  .footer__riga { flex-wrap: nowrap; }
+  .footer__riga--contatti {
+    width: auto; min-width: 0; height: auto;
+    flex-direction: column; align-items: flex-start;
+    row-gap: 12px;
+    margin-top: 12px;
+  }
+  .f-sinistra { width: auto; flex-direction: row; align-items: stretch; column-gap: 10px; padding-top: 0; }
+  .f-blocco { height: auto; padding: 0 14px; column-gap: 6px; }
+  .f-blocco__ast { width: 22px; height: 23px; }
+  .f-sinistra .f-slot--telefono { font-size: 15px; }                  /* numero leggibile: 15 px */
+  .f-telefono { height: 46px; }
+  .f-telefono .f-mini { font-size: 1em; }
+  .f-email { font-size: calc(var(--larghezza) * .115); line-height: 1.02; }
+  .f-lato { position: static; width: 100%; flex-direction: row; align-items: flex-end; column-gap: 15px; }
+  .f-motto { margin-top: 0; width: auto; height: auto; padding: 8px 12px; font-size: 15px; line-height: 1.05; flex: none; }
+  .f-firma { flex: none; width: auto; margin-left: auto; font-size: 19px; }
+  /* freccia + "wup" più grandi, altrimenti restano sotto i 10 px */
+  .f-slot--sigla { padding-bottom: calc(1em * 12 / 110); }
+  .f-freccia { width: 16px; height: 16px; }
+  .f-freccia svg { width: 11.4px; height: 11.2px; }
+  .f-sigla { font-size: 13px; }
 }
+
+/* =========================================================
+   MIGLIORIE APPROVATE — FOOTER (prima in proposta.css)
+   ========================================================= */
+/* ---------- [B6] FOOTER: ASTERISCO SULLE ETICHETTE, RIGA SOPRA L'INDIRIZZO ----------
+   L'asterisco è già il segno del footer (**90, *95045): ora apre anche
+   le etichette Menu / Social / Servizi (ora è il disegno vettoriale del Figma,
+   <svg class="f-asterisco"> in index.html, non più un carattere). Sopra l'indirizzo grande una riga
+   da 3 px (lo spessore del riquadro del telefono) chiude la griglia. */
+.footer__fondo {
+  padding-top: max(15px, calc(var(--f) * 25));
+  border-top: 3px solid currentColor;
+}
+
+/* ---------- [A2] RIGHE CHE SI DISEGNANO (footer) ----------
+   Etichette Menu / Social / Servizi e riga sopra l'indirizzo si allungano da sinistra. */
+html.animazioni-attive .footer__etichetta { border-bottom-color: transparent; position: relative; }
+html.animazioni-attive .footer__etichetta::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s var(--entra);
+}
+html.animazioni-attive .footer__gruppo:nth-child(2) .footer__etichetta::after { transition-delay: .1s; }
+html.animazioni-attive .footer__gruppo:nth-child(3) .footer__etichetta::after { transition-delay: .2s; }
+html.animazioni-attive .footer__colonne.in-vista .footer__etichetta::after { transform: none; }
+
+html.animazioni-attive .footer__fondo { border-top-color: transparent; position: relative; }
+html.animazioni-attive .footer__fondo::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: -3px;
+  height: 3px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s var(--entra);
+}
+html.animazioni-attive .footer__fondo.in-vista::before { transform: none; }
+
+/* ---------- [A5] INDIRIZZO DEL FOOTER: LE RIGHE SALGONO ----------
+   Le tre righe grandi salgono dalla loro finestra una dopo l'altra,
+   come il motto della hero e la scritta finale. */
+html.animazioni-attive .footer__riga {
+  overflow: hidden;
+  padding-bottom: .12em;               /* spazio per la gamba della p di wup.it */
+  margin-bottom: -.12em;
+}
+html.animazioni-attive .footer__riga > * {
+  transform: translateY(115%);
+  transition: transform 1s var(--entra);
+}
+html.animazioni-attive .footer__riga:nth-child(2) > * { transition-delay: .1s; }
+html.animazioni-attive .footer__riga:nth-child(3) > * { transition-delay: .2s; }
+html.animazioni-attive .footer__fondo.in-vista .footer__riga > * { transform: none; }
+
+/* ---------- [A6] STELLA DEL PUNTATORE: SI SCHIACCIA AL CLIC ----------
+   Premendo il tasto del mouse la stella si stringe e ruota di un ottavo:
+   un "timbro" che conferma il clic.
+   Sta qui perché deve venire dopo ".cursore img" del footer (cursore bianco sul giallo). */
+.cursore img { transition: transform .25s var(--entra), filter .25s ease; }
+html.cursore-premuto .cursore img { transform: scale(.7) rotate(45deg); transition-duration: .1s; }

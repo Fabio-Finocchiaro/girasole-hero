@@ -100,3 +100,95 @@
   .mvv__titolo { padding: 16px 0; }
   .mvv__testo { padding: 8px 0 40px; }
 }
+
+/* =========================================================
+   MIGLIORIE APPROVATE — CHI SIAMO (prima in proposta.css)
+   ========================================================= */
+/* ---------- [D4] CHI SIAMO SUL TELEFONO: TESTO A TUTTA LARGHEZZA ----------
+   La larghezza del testo era 765 px di Figma riscalati sullo schermo:
+   sul telefono diventava una colonna di ~200 px con grandi vuoti ai lati. */
+@media (orientation: portrait) {
+  .mvv__testo { width: 100%; }
+}
+/* niente parola da sola sull'ultima riga del paragrafo */
+.mvv__testo { text-wrap: pretty; }
+
+/* ---------- [D5] SPAZI A MULTIPLI DI 5 ANCHE SUL TELEFONO ----------
+   Regola del sito: gli spazi sono multipli di 5. Sul telefono erano
+   rimasti alcuni valori "da app" (16, 24, 8): li porto al 5 più vicino.
+   La differenza a occhio è di 1-2 px, ma ora la griglia è una sola. */
+@media (orientation: portrait) {
+  .mvv { padding: 25px var(--margine); }    /* era 24 */
+  .mvv__titolo { padding: 15px 0; }         /* era 16 */
+  .mvv__testo { padding: 10px 0 40px; }     /* era 8 */
+}
+
+/* ---------- [B4] CHI SIAMO: INDICE NUMERATO CON "+" ----------
+   Le tre parole passano da centrate ad allineate a sinistra, come un indice:
+   numero piccolo (01 / 02 / 03) a sinistra, parola, e a destra un "+"
+   che ruota in "×" quando la voce è aperta (dice subito che si apre).
+   Il testo che si apre parte sotto la parola, non più al centro.
+   Righe da 2 px, aperture e animazioni invariate. */
+.mvv__lista { counter-reset: mvv; }
+.mvv__voce { counter-increment: mvv; }
+.mvv__titolo {
+  --colonna: max(40px, calc(var(--s) * 100));
+  display: grid;
+  grid-template-columns: var(--colonna) 1fr auto;
+  align-items: center;
+  text-align: left;
+}
+.mvv__titolo::before {
+  content: "0" counter(mvv);
+  font-size: 12px;
+  line-height: 1;
+  font-variation-settings: "wdth" var(--wide), "wght" 600;
+}
+.mvv__titolo::after {
+  content: "+";
+  display: block;
+  line-height: 1;
+  transition: transform .4s cubic-bezier(.22, 1, .36, 1);
+}
+.mvv__titolo[aria-expanded="true"]::after { transform: rotate(45deg); }
+.mvv__maschera { justify-self: start; }
+.mvv__testo {
+  margin: 0 0 0 max(40px, calc(var(--s) * 100));
+  width: min(calc(var(--s) * 765), calc(100% - max(40px, calc(var(--s) * 100))));
+}
+@media (orientation: portrait) {
+  .mvv__titolo { --colonna: 40px; }
+  .mvv__testo { margin-left: 40px; width: calc(100% - 40px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mvv__titolo::after { transition: none; }
+}
+
+/* ---------- [A2] RIGHE CHE SI DISEGNANO ----------
+   Le righe nere (tra Missione / Visione /
+   Valori, sopra l'indirizzo del footer, sotto Menu / Social / Servizi)
+   si allungano da sinistra quando entrano nello schermo, una dopo l'altra. */
+html.animazioni-attive .mvv__lista { border-bottom-color: transparent; position: relative; }
+html.animazioni-attive .mvv__voce { border-top-color: transparent; position: relative; }
+html.animazioni-attive .mvv__voce::before,
+html.animazioni-attive .mvv__lista::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: var(--riga-spessore);
+  background: var(--riga);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s var(--entra);
+}
+html.animazioni-attive .mvv__voce::before { top: calc(var(--riga-spessore) * -1); }
+html.animazioni-attive .mvv__lista::after { bottom: calc(var(--riga-spessore) * -1); transition-delay: .3s; }
+html.animazioni-attive .mvv__voce:nth-child(2)::before { transition-delay: .1s; }
+html.animazioni-attive .mvv__voce:nth-child(3)::before { transition-delay: .2s; }
+html.animazioni-attive .mvv__lista.in-vista .mvv__voce::before,
+html.animazioni-attive .mvv__lista.in-vista::after { transform: none; }
+/* numeri e "+" entrano insieme alle righe */
+html.animazioni-attive .mvv__titolo::before,
+html.animazioni-attive .mvv__titolo::after { opacity: 0; transition: opacity .6s var(--entra) .4s, transform .4s var(--entra); }
+html.animazioni-attive .mvv__lista.in-vista .mvv__titolo::before,
+html.animazioni-attive .mvv__lista.in-vista .mvv__titolo::after { opacity: 1; }

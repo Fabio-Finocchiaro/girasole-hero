@@ -1,5 +1,6 @@
 <!doctype html>
-<!-- Versione attuale: la proposta approvata (proposta.css, script-proposta.js, animazioni-proposta.js).
+<!-- Versione attuale. Le migliorie approvate sono dentro style.css, lavori.css, chi-siamo.css, footer.css
+     e negli script hero.js, barra.js, animazioni.js.
      La versione precedente è in index-vecchia.html. -->
 <html lang="it">
 <head>
@@ -22,18 +23,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="lavori.css">
-  <link rel="stylesheet" href="chi-siamo.css">
-  <link rel="stylesheet" href="footer.css">
-  <link rel="stylesheet" href="proposta.css">
+  <link rel="stylesheet" href="style.css?v=20261010e">
+  <link rel="stylesheet" href="lavori.css?v=20261010e">
+  <link rel="stylesheet" href="chi-siamo.css?v=20261010e">
+  <link rel="stylesheet" href="footer.css?v=20261010e">
 </head>
 <body>
+
+  <!-- CARICAMENTO (Figma: componente "CARICAMENTO"): schermo nero con il numero e l'asterisco al centro.
+       hero.js conta da 1 a 100 mentre arrivano i fotogrammi, poi la schermata si dissolve sul sito. -->
+  <div class="caricamento" id="loader" aria-hidden="true"><span class="caricamento__numero"><span class="caricamento__ancora">*<span class="caricamento__cifre" id="loader-numero">1</span></span></span></div>
+  <noscript><style>.caricamento{display:none}</style></noscript>
 
   <!-- LOGO: fuori dalla navbar così non va in negativo -->
   <a class="logo-fisso" href="#" aria-label="WUP, torna all'inizio">
     <img class="logo-fisso__chiaro" src="images/logo.svg" alt="WUP" width="82" height="30">
-    <!-- [D1] stesso logo con la scritta WUP nera: compare sopra le sezioni chiare e il giallo (proposta.js) -->
+    <!-- [D1] stesso logo con la scritta WUP nera: compare sopra le sezioni chiare e il giallo (barra.js) -->
     <img class="logo-fisso__scuro" src="images/logo-scuro.svg" alt="" width="82" height="30" aria-hidden="true">
   </a>
 
@@ -54,6 +59,8 @@
        a tutto schermo, sfondo nero, le tre voci centrate; si chiude con la X,
        toccando una voce o col tasto Esc -->
   <div class="menu-mobile" id="menu-mobile" role="dialog" aria-modal="true" aria-label="Menu" inert>
+    <!-- sul telefono il logo sta solo qui, dentro il menu (in alto a sinistra, dove starebbe nella navbar) -->
+    <a class="menu-mobile__logo" href="#" aria-label="WUP, torna all'inizio"><img src="images/logo.svg" alt="WUP" width="82" height="30"></a>
     <button class="menu-mobile__chiudi" type="button" aria-label="Chiudi il menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4L20 20M20 4L4 20" stroke="currentColor" stroke-width="2"/></svg>
     </button>
@@ -91,10 +98,9 @@
           <div class="flower">
             <canvas id="girasole" aria-hidden="true"></canvas>
           </div>
-
-
-          <div class="loader" id="loader" aria-hidden="true">0%</div>  <!-- [P10] prima aria-live: il lettore di schermo leggeva 150 percentuali -->
-          <div class="scroll-hint" id="hint" aria-hidden="true">Scorri</div>
+          <!-- "Scorri ↓" in basso a sinistra: compare quando il caricamento è finito e sparisce al primo scroll.
+               La freccia è la stessa di tutto il sito (carosello, footer), girata verso il basso. -->
+          <div class="scroll-hint" id="hint" aria-hidden="true"><span class="scroll-hint__testo">Scorri</span><span class="scroll-hint__freccia"><svg viewBox="0 0 45.168 44.448" fill="none" focusable="false"><path d="M45.168 25.056H10.416L27.12 40.56L23.376 44.448L0 22.224V22.08L23.376 0L27.12 4.128L10.416 19.392H45.168V25.056Z" fill="currentColor"/></svg></span></div>
         </div>
         <!-- fuori dalla tavola: ancorato al bordo destro dello schermo come la navbar,
              così il testo finisce esattamente dove finisce "Contattaci" -->
@@ -103,8 +109,8 @@
     </section>
 
 
-    <!-- [A7] STRISCIA "WORK UNDER PRESSURE" (il nome esteso di WUP) (proposta animazioni): fascia gialla tra la hero e i lavori.
-         Scorre da sola e accelera con lo scroll, cambiando verso se si torna su (animazioni-proposta.js).
+    <!-- [A7] STRISCIA "WORK UNDER PRESSURE" (il nome esteso di WUP): fascia gialla tra la hero e i lavori.
+         Scorre da sola e accelera con lo scroll, cambiando verso se si torna su (animazioni.js).
          Il testo vero è nell'aria-label; le ripetizioni sono decorative. -->
     <div class="striscia" aria-hidden="true">
       <div class="striscia__binario">
@@ -130,28 +136,28 @@
               <img src="images/lavori/carosello-world-cup.jpg" alt="Shuttlecock World Cup, Italian Stage" width="1592" height="968" decoding="async">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Italian Open &amp; <br>World Cup 2025</span></p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 45.168 44.448" aria-hidden="true"><path d="M0 19.392H34.752L18.048 3.888L21.792 0L45.168 22.224V22.368L21.792 44.448L18.048 40.32L34.752 25.056H0V19.392Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Italian Open &amp; <br>World Cup 2025</span></p>
           </a>
           <a class="card" href="#" data-lavoro="infiorata">
             <div class="card__foto">
               <img src="images/lavori/carosello-infiorata.jpg" alt="Infiorata di Noto 2026, il pubblico davanti al pannello" width="1592" height="968" decoding="async" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Infiorata di Noto <br>2026</span></p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 45.168 44.448" aria-hidden="true"><path d="M0 19.392H34.752L18.048 3.888L21.792 0L45.168 22.224V22.368L21.792 44.448L18.048 40.32L34.752 25.056H0V19.392Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Infiorata di Noto <br>2026</span></p>
           </a>
           <a class="card" href="#" data-lavoro="beach-soccer">
             <div class="card__foto">
               <img src="images/lavori/carosello-beach-soccer.jpg" alt="Beach Soccer 2026, premiazione" width="1592" height="968" decoding="async" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Beach Soccer 2026</span></p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 45.168 44.448" aria-hidden="true"><path d="M0 19.392H34.752L18.048 3.888L21.792 0L45.168 22.224V22.368L21.792 44.448L18.048 40.32L34.752 25.056H0V19.392Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Beach Soccer 2026</span></p>
           </a>
           <a class="card" href="#" data-lavoro="magiantosa">
             <div class="card__foto">
               <img src="images/lavori/carosello-magiantosa.jpg" alt="Magiantosa, Lumia amaro al limone in riva al mare" width="1592" height="968" decoding="async" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Magiantosa</span></p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 45.168 44.448" aria-hidden="true"><path d="M0 19.392H34.752L18.048 3.888L21.792 0L45.168 22.224V22.368L21.792 44.448L18.048 40.32L34.752 25.056H0V19.392Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Magiantosa</span></p>
           </a>
           <!-- copie delle prime due card: servono solo al loop, non toccarle a mano -->
           <a class="card" href="#" data-lavoro="world-cup" aria-hidden="true" tabindex="-1" data-copia>
@@ -159,14 +165,14 @@
               <img src="images/lavori/carosello-world-cup.jpg" alt="" width="1592" height="968" decoding="async" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Italian Open &amp; <br>World Cup 2025</span></p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 45.168 44.448" aria-hidden="true"><path d="M0 19.392H34.752L18.048 3.888L21.792 0L45.168 22.224V22.368L21.792 44.448L18.048 40.32L34.752 25.056H0V19.392Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Italian Open &amp; <br>World Cup 2025</span></p>
           </a>
           <a class="card" href="#" data-lavoro="infiorata" aria-hidden="true" tabindex="-1" data-copia>
             <div class="card__foto">
               <img src="images/lavori/carosello-infiorata.jpg" alt="" width="1592" height="968" decoding="async" loading="lazy">
               <ul class="card__tag" aria-label="Tipologia"><li>Foto</li><li>Video</li><li>Grafica</li></ul>
             </div>
-            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 31 37" aria-hidden="true"><path d="M29.7678 20.1777C30.7441 19.2014 30.7441 17.6185 29.7678 16.6421L13.8579 0.732243C12.8816 -0.244068 11.2986 -0.244068 10.3223 0.732243C9.34602 1.70855 9.34602 3.29147 10.3223 4.26778L24.4645 18.4099L10.3223 32.552C9.34602 33.5284 9.34602 35.1113 10.3223 36.0876C11.2986 37.0639 12.8816 37.0639 13.8579 36.0876L29.7678 20.1777ZM0 18.4099V20.9099H28V18.4099V15.9099H0V18.4099Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Infiorata di Noto <br>2026</span></p>
+            <p class="card__nome"><span class="card__freccia" aria-hidden="true"><svg viewBox="0 0 45.168 44.448" aria-hidden="true"><path d="M0 19.392H34.752L18.048 3.888L21.792 0L45.168 22.224V22.368L21.792 44.448L18.048 40.32L34.752 25.056H0V19.392Z" fill="currentColor"/></svg></span><span class="card__testo-nome">Infiorata di Noto <br>2026</span></p>
           </a>
         </div>
         </div>
@@ -231,7 +237,7 @@
   <footer class="footer" id="contatti">
     <div class="footer__colonne">
       <nav class="footer__gruppo footer__gruppo--menu" aria-labelledby="footer-menu">
-        <h2 class="footer__etichetta" id="footer-menu">Menu</h2>
+        <h2 class="footer__etichetta" id="footer-menu"><svg class="f-asterisco" viewBox="8 16 39 41" aria-hidden="true" focusable="false"><path d="M23.4 16H31.32L29.89 32.28L42.54 22.16L46.83 29.31L31.32 36.35L46.72 43.5L42.54 50.65L29.78 40.42L31.43 56.92H23.29L24.83 40.42L12.29 50.65L8.11 43.5L23.51 36.35L8 29.31L12.29 22.16L24.72 32.28L23.4 16Z" fill="currentColor"/></svg>Menu</h2>
         <div class="footer__liste">
           <ul class="footer__lista">
             <li><a href="#" data-mescola><span>Home</span></a></li>
@@ -247,7 +253,7 @@
       </nav>
 
       <div class="footer__gruppo">
-        <h2 class="footer__etichetta">Social</h2>
+        <h2 class="footer__etichetta"><svg class="f-asterisco" viewBox="8 16 39 41" aria-hidden="true" focusable="false"><path d="M23.4 16H31.32L29.89 32.28L42.54 22.16L46.83 29.31L31.32 36.35L46.72 43.5L42.54 50.65L29.78 40.42L31.43 56.92H23.29L24.83 40.42L12.29 50.65L8.11 43.5L23.51 36.35L8 29.31L12.29 22.16L24.72 32.28L23.4 16Z" fill="currentColor"/></svg>Social</h2>
         <!-- href: mettere qui i link ai profili -->
         <ul class="footer__lista">
           <li><a href="#" data-mescola><span>Instagram</span></a></li>
@@ -258,7 +264,7 @@
       </div>
 
       <div class="footer__gruppo">
-        <h2 class="footer__etichetta">Servizi</h2>
+        <h2 class="footer__etichetta"><svg class="f-asterisco" viewBox="8 16 39 41" aria-hidden="true" focusable="false"><path d="M23.4 16H31.32L29.89 32.28L42.54 22.16L46.83 29.31L31.32 36.35L46.72 43.5L42.54 50.65L29.78 40.42L31.43 56.92H23.29L24.83 40.42L12.29 50.65L8.11 43.5L23.51 36.35L8 29.31L12.29 22.16L24.72 32.28L23.4 16Z" fill="currentColor"/></svg>Servizi</h2>
         <ul class="footer__lista">
           <li><a href="#" data-mescola><span>Foto</span></a></li>
           <li><a href="#" data-mescola><span>Video</span></a></li>
@@ -274,24 +280,31 @@
         <span class="footer__riga">
           <span><span aria-hidden="true">**</span>90</span>
           <span>Via Rosina Anselmi</span>
-          <span class="f-slot f-slot--sigla" aria-hidden="true"><span class="f-sigla-gruppo"><svg viewBox="0 0 28 28" fill="none"><path d="M4.2 4.2L23.8 23.8M18.2 4.2H4.2V18.2" stroke="currentColor" stroke-width="3" stroke-linecap="square"/></svg><span class="f-sigla">wup</span></span></span>
+          <span class="f-slot f-slot--sigla" aria-hidden="true"><span class="f-sigla-gruppo"><span class="f-freccia"><svg viewBox="0 0 45.168 44.448" fill="none" focusable="false"><path d="M45.168 25.056H10.416L27.12 40.56L23.376 44.448L0 22.224V22.08L23.376 0L27.12 4.128L10.416 19.392H45.168V25.056Z" fill="currentColor"/></svg></span><span class="f-sigla">wup</span></span></span>
         </span>
         <!-- riga 2: Misterbianco · , Italia · *95045 -->
         <span class="footer__riga">
           <span class="f-insieme"><span>Misterbianco</span><span>, Italia</span></span>
           <span><span aria-hidden="true">*</span><span class="f-extra">95045</span></span>
         </span>
-        <!-- riga 3: Telefono + riquadro · info * wup.it -->
-        <span class="footer__riga">
-          <a class="footer__gruppo-link" href="tel:+393926000407" aria-label="Telefono +39 392 600 0407">
-            <span class="f-parola">Telefono</span>
-            <span class="f-slot f-slot--telefono" aria-hidden="true"><span class="f-telefono"><span class="f-mini f-telefono__prefisso">+39</span><span class="f-mini f-telefono__cifre"><span>392</span><span>600 0407</span></span></span></span>
+        <!-- riga 3 (Figma: "Riga 3 – contatti"):
+             a sinistra blocco nero con i due asterischi e telefono nel riquadro,
+             al centro l'email su due righe,
+             a destra motto nel riquadro, nome e P.IVA nel rettangolo nero -->
+        <span class="footer__riga footer__riga--contatti">
+          <span class="f-sinistra">
+            <span class="f-blocco" aria-hidden="true"><svg class="f-blocco__ast" viewBox="8 16 39 41" aria-hidden="true" focusable="false"><path d="M23.4 16H31.32L29.89 32.28L42.54 22.16L46.83 29.31L31.32 36.35L46.72 43.5L42.54 50.65L29.78 40.42L31.43 56.92H23.29L24.83 40.42L12.29 50.65L8.11 43.5L23.51 36.35L8 29.31L12.29 22.16L24.72 32.28L23.4 16Z" fill="currentColor"/></svg><svg class="f-blocco__ast" viewBox="8 16 39 41" aria-hidden="true" focusable="false"><path d="M23.4 16H31.32L29.89 32.28L42.54 22.16L46.83 29.31L31.32 36.35L46.72 43.5L42.54 50.65L29.78 40.42L31.43 56.92H23.29L24.83 40.42L12.29 50.65L8.11 43.5L23.51 36.35L8 29.31L12.29 22.16L24.72 32.28L23.4 16Z" fill="currentColor"/></svg></span>
+            <a class="footer__gruppo-link" href="tel:+393926000407" aria-label="Telefono +39 392 600 0407">
+              <span class="f-slot f-slot--telefono" aria-hidden="true"><span class="f-telefono"><span class="f-mini f-telefono__prefisso">+39</span><span class="f-mini f-telefono__cifre">392 600 0407</span></span></span>
+            </a>
+          </span>
+          <a class="footer__gruppo-link f-email" href="mailto:wup.designstudio@gmail.com" aria-label="wup.designstudio@gmail.com">
+            <span class="f-parola">wup.designstudio<br>@gmail.com</span>
           </a>
-          <a class="footer__gruppo-link" href="mailto:info@wup.it" aria-label="info@wup.it">
-            <span class="f-parola">info</span>
-            <span class="f-slot f-slot--asterisco" aria-hidden="true"><svg viewBox="0 0 54 72"><path d="M23.4 16H31.32L29.89 32.28L42.54 22.16L46.83 29.31L31.32 36.35L46.72 43.5L42.54 50.65L29.78 40.42L31.43 56.92H23.29L24.83 40.42L12.29 50.65L8.11 43.5L23.51 36.35L8 29.31L12.29 22.16L24.72 32.28L23.4 16Z" fill="currentColor"/></svg></span>
-            <span class="f-parola f-dominio">wup.it</span>
-          </a>
+          <span class="f-lato">
+            <span class="f-motto">Work<br>under<br>pressure</span>
+            <span class="f-firma"><span class="f-nome">Stefano Scuderi</span><span class="f-piva">P.IVA: 06157660876</span></span>
+          </span>
         </span>
       </address>
       <p class="footer__copy">©2026</p>
@@ -307,15 +320,15 @@
 
   <div class="cursore" id="cursore" aria-hidden="true"><img src="images/puntatore.svg" alt=""></div>
 
-  <script src="script-proposta.js"></script>  <!-- [P7] -->
-  <script src="lavori.js"></script>
-  <script src="chi-siamo.js"></script>
-  <script src="mescola.js"></script>
-  <script src="scia.js"></script>
-  <script src="scritta.js"></script>
-  <script src="footer.js"></script>
-  <script src="menu.js"></script>
-  <script src="proposta.js"></script>  <!-- [D1] [D2] -->
-  <script src="animazioni-proposta.js"></script>  <!-- [A…] -->
+  <script src="hero.js?v=20261010e"></script>  <!-- [P7] -->
+  <script src="lavori.js?v=20261010e"></script>
+  <script src="chi-siamo.js?v=20261010e"></script>
+  <script src="mescola.js?v=20261010e"></script>
+  <script src="scia.js?v=20261010e"></script>
+  <script src="scritta.js?v=20261010e"></script>
+  <script src="footer.js?v=20261010e"></script>
+  <script src="menu.js?v=20261010e"></script>
+  <script src="barra.js?v=20261010e"></script>  <!-- [D1] [D2] -->
+  <script src="animazioni.js?v=20261010e"></script>  <!-- [A…] -->
 </body>
 </html>
