@@ -662,33 +662,46 @@ html.nav-sul-giallo .nav__menu { color: var(--nero); }
   html.nav-sul-giallo .nav .pill::before { background: var(--nero); }
 }
 
-/* ---------- [B5] "REALE." IN UN BLOCCO GIALLO ----------
-   L'ultima parola della scritta finale sta su un blocco giallo pieno,
-   come "IS" e "REAL" nella hero: la frase chiude con il colore del brand
-   e con un gesto netto. Il blocco sale insieme alla parola. */
-.scritta__parola:last-child > span {
-  background: var(--giallo);
-  padding: 0 .1em;
-  margin-left: -.1em;     /* la R resta allineata alle altre righe, il giallo sborda a sinistra */
+/* ---------- [A8] "e figo" SCRITTO A MANO SU "REALE." ----------
+   "REALE." ora è nero come il resto della frase (tolto il blocco giallo [B5]/[A4]).
+   Qualche istante dopo che la parola è salita, sopra di lei compare "e figo"
+   in giallo, come se venisse scritto: ogni tratto dell'SVG si disegna da 0 a 1
+   (stroke-dashoffset = trim path), uno dopo l'altro.
+   Misure in em: seguono la grandezza della scritta su computer e telefono. */
+.scritta__reale {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
 }
-
-/* ---------- [A4] "REALE.": IL GIALLO ENTRA DA SINISTRA ----------
-   Prima sale la parola (come le altre), poi il blocco giallo
-   le passa sotto da sinistra a destra, come un evidenziatore. */
-html.animazioni-attive .scritta__parola:last-child > span { background: none; position: relative; z-index: 0; }
-html.animazioni-attive .scritta__parola:last-child > span::before {
-  content: "";
+.scritta__figo {
+  --attesa: 1.7s;                         /* ⇦ quanto aspetta dopo l'inizio della comparsa della frase */
   position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--giallo);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .7s var(--entra);
+  left: 2.2em;                            /* misure prese dal riferimento: la "e" si appoggia su "E." */
+  top: -.45em;                            /* la f sale verso la riga di sopra */
+  width: 2.83em;                          /* 362 px di Figma su un testo di 128 */
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
 }
-html.animazioni-attive .scritta.visibile .scritta__parola:last-child > span::before {
-  transform: none;
-  transition-delay: calc(6 * 110ms + .45s);
+.scritta__figo-forma { fill: var(--giallo); }
+/* i tratti della maschera: bianco = si vede */
+.scritta__figo mask path {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 30;                       /* abbastanza larghi da coprire tutto il segno del pennello */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 2;                  /* pathLength="1": il tratto intero vale 1 */
+  stroke-dashoffset: 1;                   /* nascosto */
+  transition: none;                       /* uscendo dalla sezione si cancella subito, così rientrando si riscrive */
+}
+.scritta.visibile .scritta__figo mask path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--per) cubic-bezier(.3, .6, .4, 1);
+  transition-delay: calc(var(--attesa) + var(--da));
+}
+@media (prefers-reduced-motion: reduce) {
+  .scritta__figo mask path { stroke-dashoffset: 0; transition: none; }
 }
 
 /* ---------- [A7] STRISCIA "WORK UNDER PRESSURE" ----------
